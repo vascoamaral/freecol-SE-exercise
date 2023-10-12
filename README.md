@@ -1,12 +1,13 @@
-----------------------------
+
 ## Group Members:
-* Alexandre Tashchuk   62568   AlexandreTashchuk
-* Dinis Santos         62586   GSUS003
-* Gil Ferrão           62609   Gil-Ferrao
-* José Costa           62637   zepedrocosta
-* Pedro Figueirinha    61893   Pedro-Figueirinha
-* Rodrigo Albuquerque  63184   RSAlbuquerque
------------------------------
+
+  * Alexandre Tashchuk   62568   AlexandreTashchuk
+  * Dinis Santos         62586   GSUS003
+  * Gil Ferrão           62609   Gil-Ferrao
+  * José Costa           62637   zepedrocosta
+  * Pedro Figueirinha    61893   Pedro-Figueirinha
+  * Rodrigo Albuquerque  63184   RSAlbuquerque
+
 # FreeCol - Colonization Strategy Game
 
 <!-- [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/13524.svg)](https://scan.coverity.com/projects/freecol-freecol) -->
