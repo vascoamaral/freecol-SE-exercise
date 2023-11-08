@@ -1,0 +1,3 @@
+Review a Use Case Diagram de 63350
+
+Diagrama simples e fácil de entender. Talvez falte informações mais detalhadas quanto às relações e atores.

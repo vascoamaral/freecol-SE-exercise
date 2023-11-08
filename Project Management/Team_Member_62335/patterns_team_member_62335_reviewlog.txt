@@ -1,0 +1,4 @@
+Review a Code Smells de 62438
+
+
+Todos os patterns apresentados são de facto patterns e estão bem identificados como requerido. Nada a acrescentar.
