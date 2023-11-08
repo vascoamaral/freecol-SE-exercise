@@ -1,0 +1,5 @@
+Reviewlog das code métricas feitas pelo team member 63347
+É feita uma boa interpretação dos resultados obtidos através das métricas, permitindo perceber
+que o código tem problemas relacionados a coupling dizendo que existem muitas classes dependentes de outras
+o que revela complexidade e fragilidade, também nos revela que o código tem um baixo nivél de abstração, tal 
+como outras métricas a indicar que o código é bastante estavél apesar de n ser muito extensivél
