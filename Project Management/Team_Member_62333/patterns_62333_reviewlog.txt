@@ -1,0 +1,5 @@
+Review de Diogo Nunes a Code Patterns de João Fernandes:
+
+Factory Pattern - Confirmado
+Facade - Confirmado
+Template - Confirmado
