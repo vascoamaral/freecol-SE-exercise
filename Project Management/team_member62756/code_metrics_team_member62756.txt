@@ -1,0 +1,4 @@
+Metrics (António Almeida - 62335)
+
+As metrics estão corretas a legenda está correta, poderia ter mais informação do que cada cariável significa e mais informação sobre as consequências
+de algumas delas serem altas.
