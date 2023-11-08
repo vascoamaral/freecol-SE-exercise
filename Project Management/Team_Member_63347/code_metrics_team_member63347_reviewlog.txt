@@ -1,0 +1,2 @@
+Reviewlog dos code metrics do team member 62438
+Diagrama facil entender sobre as diplomacias entre o jogador e o sistema, parece-me correto
