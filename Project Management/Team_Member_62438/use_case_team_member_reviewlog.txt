@@ -1,2 +1,3 @@
+review do use case diagram team member 62333
 Acho que o use case diagrama está incorreto, os atores não me parecem estar bem definidos tal como as suas 
 interações com o sistema
