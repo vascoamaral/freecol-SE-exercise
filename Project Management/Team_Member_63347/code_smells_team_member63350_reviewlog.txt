@@ -1,0 +1,4 @@
+Reviewlog dos code smells feitos pelo team member 63350
+rearrangeColony() é considerado um Long method, eu concordo pelo código apresentado que poderia ser possivel dividir melhor.
+startMapEditor() é considerado um Feature Envy, também me parece sendo que são feitas diversas chamadas à mesma classe.
+determineStances() é considerado message chain, eu concordo devido ao grande numero de chamadas consecutivas.
