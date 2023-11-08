@@ -1,0 +1,3 @@
+Factory Pattern - Confirmado
+Facade - Confirmado
+Template - Confirmado
