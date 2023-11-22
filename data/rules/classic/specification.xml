@@ -2224,6 +2224,8 @@
       </limit>
       <ability id="model.ability.carryGoods"
                value="true"/>
+      <ability id="model.ability.onlyGoods"
+               value="true"/>
       <ability id="model.ability.canBeCaptured"
                value="true"/>
     </unit-type>

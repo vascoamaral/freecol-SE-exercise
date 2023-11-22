@@ -67,7 +67,8 @@ public class LostCityRumour extends TileItem {
         MOUNDS,
         RUINS,
         CIBOLA,
-        FOUNTAIN_OF_YOUTH;
+        FOUNTAIN_OF_YOUTH,
+        GIVE_ARTILLERY, GIVE_BOAT, GIVE_WAGON;
 
         /**
          * Get the stem key for this LCR type.
@@ -122,6 +123,7 @@ public class LostCityRumour extends TileItem {
      */
     public LostCityRumour(Game game, Tile tile, RumourType type, String name) {
         super(game, tile);
+
 
         this.type = type;
         this.name = name;
@@ -187,17 +189,17 @@ public class LostCityRumour extends TileItem {
         //
         // If the tile is native-owned, allow burial grounds rumour.
         final boolean allowBurial = tile.getOwner() != null
-            && tile.getOwner().isIndian();
+                && tile.getOwner().isIndian();
         // Only colonial players get FoYs as immigration ends at independence
         final boolean allowFoY = unit != null
-            && unit.getOwner().getPlayerType() == Player.PlayerType.COLONIAL;
+                && unit.getOwner().getPlayerType() == Player.PlayerType.COLONIAL;
         // Certain units can learn a skill at LCRs
         final boolean allowLearn = unit != null
-            && !spec.getUnitChanges(UnitChangeType.LOST_CITY,
-                                    unit.getType()).isEmpty();
+                && !spec.getUnitChanges(UnitChangeType.LOST_CITY,
+                unit.getType()).isEmpty();
         // Expert units never vanish
         final boolean allowVanish = !(unit != null
-            && unit.hasAbility(Ability.EXPERT_SCOUT));
+                && unit.hasAbility(Ability.EXPERT_SCOUT));
 
         // Work out the bad and good chances.  The base values are
         // difficulty options.  Neutral results take up any remainder.
@@ -214,12 +216,12 @@ public class LostCityRumour extends TileItem {
             } else {
                 // Otherwise apply any unit exploration bonus
                 float mod = unit.apply(1.0f, getGame().getTurn(),
-                    Modifier.EXPLORE_LOST_CITY_RUMOUR);
+                        Modifier.EXPLORE_LOST_CITY_RUMOUR);
                 percentBad = Math.round(percentBad / mod);
                 percentGood = Math.round(percentGood * mod);
             }
         }
-        int percentNeutral = Math.max(0, 100 - percentBad - percentGood);
+        int percentNeutral = 0; // Math.max(0, 100 - percentBad - percentGood);
 
         // Add all possible events to a RandomChoice List
         List<RandomChoice<RumourType>> c = new ArrayList<>();
@@ -231,23 +233,35 @@ public class LostCityRumour extends TileItem {
             }
             if (allowLearn) {
                 c.add(new RandomChoice<>(RumourType.LEARN,
-                        30 * percentGood));
+                        3 * percentGood));
                 c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
-                        30 * percentGood));
+                        3 * percentGood));
                 c.add(new RandomChoice<>(RumourType.COLONIST,
-                        20 * percentGood));
+                        1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
+                        80 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
+                        1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_WAGON,
+                        1* percentGood));
             } else {
                 c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
-                        50 * percentGood));
+                        5 * percentGood));
                 c.add(new RandomChoice<>(RumourType.COLONIST,
-                        30 * percentGood));
+                        3 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
+                        80 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
+                        1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_WAGON,
+                        1* percentGood));
             }
             c.add(new RandomChoice<>(RumourType.MOUNDS,
                     8 * percentGood));
             c.add(new RandomChoice<>(RumourType.RUINS,
                     6 * percentGood));
             c.add(new RandomChoice<>(RumourType.CIBOLA,
-                    4 * percentGood));
+                    1 * percentGood));
         }
 
         if (percentBad > 0) { // The BAD
@@ -270,7 +284,7 @@ public class LostCityRumour extends TileItem {
         }
 
         return RandomChoice.getWeightedRandom(logger, "Choose rumour", c,
-                                              random);
+                random);
     }
 
     /**
@@ -285,19 +299,19 @@ public class LostCityRumour extends TileItem {
                                           Random random) {
         final Game game = getGame();
         return (mounds)
-            ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                               RumourType.NOTHING.getAlternateDescriptionKey("mounds"),
-                               player)
-            : (game.getTurn().getYear() % 100 == 12
+                ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                RumourType.NOTHING.getAlternateDescriptionKey("mounds"),
+                player)
+                : (game.getTurn().getYear() % 100 == 12
                 && randomInt(logger, "Mayans?", random, 4) == 0)
-            ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                               RumourType.NOTHING.getAlternateDescriptionKey("mayans"),
-                               player)
+                ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                RumourType.NOTHING.getAlternateDescriptionKey("mayans"),
+                player)
                 .addAmount("%years%",
-                    MAYAN_PROPHESY_YEAR - game.getTurn().getYear())
-            : new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                               NameCache.getRumourNothingKey(random),
-                               player);
+                        MAYAN_PROPHESY_YEAR - game.getTurn().getYear())
+                : new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                NameCache.getRumourNothingKey(random),
+                player);
     }
 
 
@@ -447,7 +461,7 @@ public class LostCityRumour extends TileItem {
         super.readAttributes(xr);
 
         tile = xr.findFreeColGameObject(getGame(), TILE_TAG,
-                                        Tile.class, (Tile)null, true);
+                Tile.class, (Tile)null, true);
 
         type = xr.getAttribute(TYPE_TAG, RumourType.class, (RumourType)null);
 

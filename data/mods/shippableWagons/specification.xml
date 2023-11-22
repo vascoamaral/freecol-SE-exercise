@@ -27,6 +27,8 @@
         <left-hand-side operand-type="units" scope-level="player" />
         <right-hand-side operand-type="settlements" scope-level="player" />
       </limit>
+      <ability id="model.ability.onlyGoods"
+               value="true"/>
       <ability id="model.ability.carryGoods"
                value="true"/>
       <ability id="model.ability.canBeCaptured"

@@ -128,9 +128,9 @@ public class ServerUnit extends Unit implements TurnTaker {
      */
     public ServerUnit(Game game, Location location, Unit template) {
         this(game, location,
-            game.getPlayerByNationId(template.getOwner().getNationId()),
-            game.getSpecification().getUnitType(template.getType().getId()),
-            game.getSpecification().getDefaultRole());
+                game.getPlayerByNationId(template.getOwner().getNationId()),
+                game.getSpecification().getUnitType(template.getType().getId()),
+                game.getSpecification().getDefaultRole());
 
         final Specification spec = getSpecification();
         if (template.getName() != null) setName(template.getName());
@@ -141,7 +141,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         movesLeft = template.getMovesLeft();
         hitPoints = template.getType().getHitPoints();
         changeRole(spec.getRole(template.getRole().getId()),
-                   template.getRoleCount());
+                template.getRoleCount());
         setStateUnchecked(template.getState());
         if (getType().canCarryGoods()) {
             setGoodsContainer(new GoodsContainer(game, this));
@@ -224,16 +224,16 @@ public class ServerUnit extends Unit implements TurnTaker {
         Tile tile = getTile();
         tile.cacheUnseen();//+til
         AbstractGoods deliver = getWorkImprovement().getType()
-            .getProduction(tile.getType());
+                .getProduction(tile.getType());
         if (deliver != null) { // Deliver goods if any
             final Turn turn = getGame().getTurn();
             int amount = deliver.getAmount();
             amount = (int)this.apply(amount, turn,
-                Modifier.TILE_TYPE_CHANGE_PRODUCTION, deliver.getType());
+                    Modifier.TILE_TYPE_CHANGE_PRODUCTION, deliver.getType());
             Settlement settlement = tile.getOwningSettlement();
             if (settlement != null && owner.owns(settlement)) {
                 amount = (int)settlement.apply(amount, turn,
-                    Modifier.TILE_TYPE_CHANGE_PRODUCTION, deliver.getType());
+                        Modifier.TILE_TYPE_CHANGE_PRODUCTION, deliver.getType());
                 settlement.addGoods(deliver.getType(), amount);
             }
         }
@@ -253,18 +253,18 @@ public class ServerUnit extends Unit implements TurnTaker {
         int exposeResource = tileImprovementType.getExposeResourcePercent();
         if (exposeResource > 0 && !tile.hasResource()) {
             if (randomInt(logger, "Expose resource", random, 100)
-                < exposeResource) {
+                    < exposeResource) {
                 ResourceType resType = RandomChoice
-                    .getWeightedRandom(logger, "Resource type",
-                                       tile.getType().getResourceTypes(),
-                                       random);
+                        .getWeightedRandom(logger, "Resource type",
+                                tile.getType().getResourceTypes(),
+                                random);
                 int minValue = resType.getMinValue();
                 int maxValue = resType.getMaxValue();
                 int value = minValue + ((minValue == maxValue) ? 0
-                    : randomInt(logger, "Resource quantity",
-                                random, maxValue - minValue + 1));
+                        : randomInt(logger, "Resource quantity",
+                        random, maxValue - minValue + 1));
                 tile.addResource(new Resource(getGame(), tile,
-                                              resType, value));//-til
+                        resType, value));//-til
             }
         }
 
@@ -274,23 +274,23 @@ public class ServerUnit extends Unit implements TurnTaker {
             // ti.getType().getRequiredRole().getRequiredGoods()
             final Player owner = getOwner();
             StringTemplate locName
-                = getLocation().getLocationLabelFor(owner);
+                    = getLocation().getLocationLabelFor(owner);
             String messageId = getType() + ".noMoreTools";
             if (!Messages.containsKey(messageId)) {
                 messageId = "model.unit.noMoreTools";
             }
             cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.WARNING,
-                                 messageId, this)
-                    .addStringTemplate("%unit%", getLabel())
-                    .addStringTemplate("%location%", locName));
+                    new ModelMessage(ModelMessage.MessageType.WARNING,
+                            messageId, this)
+                            .addStringTemplate("%unit%", getLabel())
+                            .addStringTemplate("%location%", locName));
         }
 
         // Cancel other co-located improvements of the same type
         for (Unit unit : transform(tile.getUnits(),
                 u -> (u.getWorkImprovement() != null
-                    && u.getWorkImprovement().getType() == ti.getType()
-                    && u.getState() == UnitState.IMPROVING))) {
+                        && u.getWorkImprovement().getType() == ti.getType()
+                        && u.getState() == UnitState.IMPROVING))) {
             unit.setWorkLeft(-1);
             unit.setWorkImprovement(null);
             unit.setState(UnitState.ACTIVE);
@@ -309,13 +309,13 @@ public class ServerUnit extends Unit implements TurnTaker {
 
         Location oldLocation = getLocation();
         Colony colony = (oldLocation instanceof WorkLocation) ? getColony()
-            : null;
+                : null;
         if (colony != null) oldLocation.getTile().cacheUnseen();//+til
         setLocation(carrier);//-vis: only if on a different tile
-                             //-til if moving from colony
+        //-til if moving from colony
         setMovesLeft(0);
         cs.add(See.only(owner), (colony != null) ? colony
-            : (FreeColGameObject)oldLocation);
+                : (FreeColGameObject)oldLocation);
         if (carrier.getLocation() != oldLocation) {
             cs.add(See.only(owner), carrier);
         }
@@ -340,16 +340,16 @@ public class ServerUnit extends Unit implements TurnTaker {
         if (!isDamaged()) {
             Location loc = Location.upLoc(getLocation());
             cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.UNIT_REPAIRED,
-                                 "model.unit.unitRepaired",
-                                 this, (FreeColGameObject)loc)
-                    .addStringTemplate("%unit%", getLabel())
-                    .addStringTemplate("%repairLocation%",
-                        loc.getLocationLabelFor(owner)));
+                    new ModelMessage(ModelMessage.MessageType.UNIT_REPAIRED,
+                            "model.unit.unitRepaired",
+                            this, (FreeColGameObject)loc)
+                            .addStringTemplate("%unit%", getLabel())
+                            .addStringTemplate("%repairLocation%",
+                                    loc.getLocationLabelFor(owner)));
             setState(UnitState.ACTIVE);
         }
         cs.addPartial(See.only(owner), this,
-            "hitPoints", String.valueOf(this.getHitPoints()));
+                "hitPoints", String.valueOf(this.getHitPoints()));
     }
 
     /**
@@ -374,14 +374,14 @@ public class ServerUnit extends Unit implements TurnTaker {
             // FIXME: should a fortress slow a ship?
             Player enemy;
             if (tile.isLand()
-                || tile.getColony() != null
-                || tile.getFirstUnit() == null
-                || (enemy = tile.getFirstUnit().getOwner()) == player) continue;
+                    || tile.getColony() != null
+                    || tile.getFirstUnit() == null
+                    || (enemy = tile.getFirstUnit().getOwner()) == player) continue;
             for (Unit enemyUnit : transform(tile.getUnits(), u ->
                     (u.isNaval()
-                        && (pirate || u.hasAbility(Ability.PIRACY)
+                            && (pirate || u.hasAbility(Ability.PIRACY)
                             || (u.isOffensiveUnit()
-                                && player.atWarWith(enemy)))))) {
+                            && player.atWarWith(enemy)))))) {
                 double power = combatModel.getOffencePower(enemyUnit, this);
                 totalAttackPower += power;
                 if (power > attackPower) {
@@ -396,11 +396,11 @@ public class ServerUnit extends Unit implements TurnTaker {
             if (randomInt(logger, "Slowed", random,
                     (int)Math.round(totalProbability + 1)) < totalAttackPower) {
                 int diff = Math.max(0,
-                    (int)Math.round(totalAttackPower - defencePower));
+                        (int)Math.round(totalAttackPower - defencePower));
                 int moves = Math.min(9, 3 + diff / 3);
                 setMovesLeft(getMovesLeft() - moves);
                 logger.info(getId() + " slowed by " + attacker.getId()
-                    + " by " + Integer.toString(moves) + " moves.");
+                        + " by " + Integer.toString(moves) + " moves.");
             } else {
                 attacker = null;
             }
@@ -419,13 +419,13 @@ public class ServerUnit extends Unit implements TurnTaker {
         final Player indianPlayer = tile.getOwner();
         ((ServerPlayer)owner).csContact(indianPlayer, cs);
         ((ServerPlayer)indianPlayer).csModifyTension(owner,
-            Tension.Level.HATEFUL.getLimit(), cs);//+til
+                Tension.Level.HATEFUL.getLimit(), cs);//+til
         ((ServerPlayer)owner).csChangeStance(Stance.WAR, indianPlayer, true, cs);
         cs.addMessage(owner,
-            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                             RumourType.BURIAL_GROUND.getDescriptionKey(),
-                             owner, this)
-                .addStringTemplate("%nation%", indianPlayer.getNationLabel()));
+                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                        RumourType.BURIAL_GROUND.getDescriptionKey(),
+                        owner, this)
+                        .addStringTemplate("%nation%", indianPlayer.getNationLabel()));
     }
 
     /**
@@ -448,7 +448,8 @@ public class ServerUnit extends Unit implements TurnTaker {
         UnitType unitType;
         Unit newUnit = null;
         List<UnitType> treasureUnitTypes
-            = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
+                = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
+
 
         RumourType rumour = lostCity.getType();
         if (rumour == null) {
@@ -457,18 +458,18 @@ public class ServerUnit extends Unit implements TurnTaker {
         // Filter out failing cases that could only occur if the
         // type was explicitly set in debug mode.
         switch (rumour) {
-        case BURIAL_GROUND: case MOUNDS:
-            if (tile.getOwner() == null || !tile.getOwner().isIndian()) {
-                rumour = RumourType.NOTHING;
-            }
-            break;
-        case LEARN:
-            if (getUnitChange(UnitChangeType.LOST_CITY) != null) {
-                rumour = RumourType.NOTHING;
-            }
-            break;
-        default:
-            break;
+            case BURIAL_GROUND: case MOUNDS:
+                if (tile.getOwner() == null || !tile.getOwner().isIndian()) {
+                    rumour = RumourType.NOTHING;
+                }
+                break;
+            case LEARN:
+                if (getUnitChange(UnitChangeType.LOST_CITY) != null) {
+                    rumour = RumourType.NOTHING;
+                }
+                break;
+            default:
+                break;
         }
 
         // Mounds are a special case that degrade to other cases.
@@ -479,30 +480,30 @@ public class ServerUnit extends Unit implements TurnTaker {
             while (!done) {
                 rumour = lostCity.chooseType(this, random);
                 switch (rumour) {
-                case NOTHING: // Do not accept nothing-result the first time.
-                    if (nothing) {
+                    case NOTHING: // Do not accept nothing-result the first time.
+                        if (nothing) {
+                            done = true;
+                        } else {
+                            nothing = true;
+                        }
+                        break;
+                    case EXPEDITION_VANISHES: case TRIBAL_CHIEF:
                         done = true;
-                    } else {
-                        nothing = true;
-                    }
-                    break;
-                case EXPEDITION_VANISHES: case TRIBAL_CHIEF:
-                    done = true;
-                    break;
-                case RUINS:
-                    done = true;
-                    // Misiulo confirms that in Col1 deSoto does *not*
-                    // protect against a burial ground at the same
-                    // time as a ruins find!
-                    if (randomInt(logger, "Ruins+Burial", random, 100)
-                        >= spec.getPercentage(GameOptions.BAD_RUMOUR)) break;
-                    // Fall through
-                case BURIAL_GROUND:
-                    done = tile.getOwner() != null
-                        && tile.getOwner().isIndian();
-                    break;
-                default:
-                    ; // unacceptable result for mounds
+                        break;
+                    case RUINS:
+                        done = true;
+                        // Misiulo confirms that in Col1 deSoto does *not*
+                        // protect against a burial ground at the same
+                        // time as a ruins find!
+                        if (randomInt(logger, "Ruins+Burial", random, 100)
+                                >= spec.getPercentage(GameOptions.BAD_RUMOUR)) break;
+                        // Fall through
+                    case BURIAL_GROUND:
+                        done = tile.getOwner() != null
+                                && tile.getOwner().isIndian();
+                        break;
+                    default:
+                        ; // unacceptable result for mounds
                 }
             }
         }
@@ -511,133 +512,175 @@ public class ServerUnit extends Unit implements TurnTaker {
         boolean result = true;
         String key = rumour.getDescriptionKey();
         switch (rumour) {
-        case BURIAL_GROUND:
-            csNativeBurialGround(cs);
-            break;
-        case EXPEDITION_VANISHES:
-            cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                 key, owner));
-            result = false;
-            break;
-        case NOTHING:
-            cs.addMessage(owner,
-                lostCity.getNothingMessage(owner, mounds, random));
-            break;
-        case LEARN:
-            StringTemplate oldName = getLabel();
-            UnitTypeChange uc = getRandomMember(logger, "Choose learn",
-                spec.getUnitChanges(UnitChangeType.LOST_CITY, getType()),
-                random);
-            changeType(uc.to);//-vis(serverPlayer)
-            owner.invalidateCanSeeTiles();//+vis(serverPlayer)
-            cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                 key, owner, this)
-                    .addStringTemplate("%unit%", oldName)
-                    .addNamed("%type%", getType()));
-            break;
-        case TRIBAL_CHIEF:
-            int chiefAmount = randomInt(logger, "Chief base amount",
-                                        random, dx * 10) + dx * 5;
-            owner.modifyGold(chiefAmount);
-            cs.addPartial(See.only(owner), owner,
-                "gold", String.valueOf(owner.getGold()),
-                "score", String.valueOf(owner.getScore()));
-            if (mounds) key = rumour.getAlternateDescriptionKey("mounds");
-            cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                 key, owner, this)
-                    .addAmount("%money%", chiefAmount));
-            owner.invalidateCanSeeTiles();//+vis(serverPlayer)
-            break;
-        case COLONIST:
-            List<UnitType> foundTypes
-                = spec.getUnitTypesWithAbility(Ability.FOUND_IN_LOST_CITY);
-            unitType = getRandomMember(logger, "Choose found",
-                                       foundTypes, random);
-            newUnit = new ServerUnit(game, tile, owner,
-                                     unitType);//-vis: safe, scout on tile
-            cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                 key, owner, newUnit));
-            break;
-        case CIBOLA:
-            String cityName = NameCache.getNextCityOfCibola();
-            if (cityName != null) {
-                int treasureAmount = randomInt(logger,
-                    "Base treasure amount", random, dx * 600) + dx * 300;
-                unitType = getRandomMember(logger, "Choose train",
-                                           treasureUnitTypes, random);
-                newUnit = new ServerUnit(game, tile, owner,
-                                         unitType);//-vis: safe, scout on tile
-                newUnit.setTreasureAmount(treasureAmount);
-                cs.addMessage(owner,
-                    new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                     key, owner, newUnit)
-                        .addName("%city%", cityName)
-                        .addAmount("%money%", treasureAmount));
-                cs.addGlobalHistory(game,
-                    new HistoryEvent(game.getTurn(),
-                        HistoryEvent.HistoryEventType.CITY_OF_GOLD, owner)
-                    .addStringTemplate("%nation%", owner.getNationLabel())
-                    .addName("%city%", cityName)
-                    .addAmount("%treasure%", treasureAmount));
+            case BURIAL_GROUND:
+                csNativeBurialGround(cs);
                 break;
-            }
-            // Fall through, found all the cities of gold.
-        case RUINS:
-            int ruinsAmount = randomInt(logger, "Base ruins amount", random,
-                                        dx * 2) * 300 + 50;
-            if (ruinsAmount < 500) { // FIXME: remove magic number
-                owner.modifyGold(ruinsAmount);
+            case EXPEDITION_VANISHES:
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner));
+                result = false;
+                break;
+            case NOTHING:
+                cs.addMessage(owner,
+                        lostCity.getNothingMessage(owner, mounds, random));
+                break;
+            case LEARN:
+                StringTemplate oldName = getLabel();
+                UnitTypeChange uc = getRandomMember(logger, "Choose learn",
+                        spec.getUnitChanges(UnitChangeType.LOST_CITY, getType()),
+                        random);
+                changeType(uc.to);//-vis(serverPlayer)
+                owner.invalidateCanSeeTiles();//+vis(serverPlayer)
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, this)
+                                .addStringTemplate("%unit%", oldName)
+                                .addNamed("%type%", getType()));
+                break;
+            case TRIBAL_CHIEF:
+                int chiefAmount = randomInt(logger, "Chief base amount",
+                        random, dx * 10) + dx * 5;
+                owner.modifyGold(chiefAmount);
                 cs.addPartial(See.only(owner), owner,
-                    "gold", String.valueOf(owner.getGold()),
-                    "score", String.valueOf(owner.getScore()));
-            } else {
-                unitType = getRandomMember(logger, "Choose train",
-                                           treasureUnitTypes, random);
+                        "gold", String.valueOf(owner.getGold()),
+                        "score", String.valueOf(owner.getScore()));
+                if (mounds) key = rumour.getAlternateDescriptionKey("mounds");
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, this)
+                                .addAmount("%money%", chiefAmount));
+                owner.invalidateCanSeeTiles();//+vis(serverPlayer)
+                break;
+            case COLONIST:
+                List<UnitType> foundTypes
+                        = spec.getUnitTypesWithAbility(Ability.FOUND_IN_LOST_CITY);
+                unitType = getRandomMember(logger, "Choose found",
+                        foundTypes, random);
                 newUnit = new ServerUnit(game, tile, owner,
-                                         unitType);//-vis: safe, scout on tile
-                newUnit.setTreasureAmount(ruinsAmount);
-            }
-            if (mounds) key = rumour.getAlternateDescriptionKey("mounds");
-            cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                 key, owner,
-                                 ((newUnit != null) ? newUnit : this))
-                    .addAmount("%money%", ruinsAmount));
-            break;
-        case FOUNTAIN_OF_YOUTH:
-            ServerEurope europe = (ServerEurope)owner.getEurope();
-            if (europe == null) {
-                // FoY should now be disabled for non-colonial
-                // players, but leave this in for now as it is harmless.
+                        unitType);//-vis: safe, scout on tile
                 cs.addMessage(owner,
-                    new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                     rumour.getAlternateDescriptionKey("noEurope"),
-                                     owner, this));
-            } else {
-                if (owner.isAI()) { // FIXME: let the AI select
-                    europe.generateFountainRecruits(dx, random);
-                    cs.add(See.only(owner), europe);
-                } else {
-                    // Remember, and ask player to select
-                    ((ServerPlayer)owner).setRemainingEmigrants(dx);
-                    cs.add(See.only(owner),
-                           new FountainOfYouthMessage(dx));
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit));
+                break;
+            case CIBOLA:
+                String cityName = NameCache.getNextCityOfCibola();
+                if (cityName != null) {
+                    int treasureAmount = randomInt(logger,
+                            "Base treasure amount", random, dx * 600) + dx * 300;
+                    unitType = getRandomMember(logger, "Choose train",
+                            treasureUnitTypes, random);
+                    newUnit = new ServerUnit(game, tile, owner,
+                            unitType);//-vis: safe, scout on tile
+                    newUnit.setTreasureAmount(treasureAmount);
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, newUnit)
+                                    .addName("%city%", cityName)
+                                    .addAmount("%money%", treasureAmount));
+                    cs.addGlobalHistory(game,
+                            new HistoryEvent(game.getTurn(),
+                                    HistoryEvent.HistoryEventType.CITY_OF_GOLD, owner)
+                                    .addStringTemplate("%nation%", owner.getNationLabel())
+                                    .addName("%city%", cityName)
+                                    .addAmount("%treasure%", treasureAmount));
+                    break;
                 }
+                // Fall through, found all the cities of gold.
+            case RUINS:
+                int ruinsAmount = randomInt(logger, "Base ruins amount", random,
+                        dx * 2) * 300 + 50;
+                if (ruinsAmount < 500) { // FIXME: remove magic number
+                    owner.modifyGold(ruinsAmount);
+                    cs.addPartial(See.only(owner), owner,
+                            "gold", String.valueOf(owner.getGold()),
+                            "score", String.valueOf(owner.getScore()));
+                } else {
+                    unitType = getRandomMember(logger, "Choose train",
+                            treasureUnitTypes, random);
+                    newUnit = new ServerUnit(game, tile, owner,
+                            unitType);//-vis: safe, scout on tile
+                    newUnit.setTreasureAmount(ruinsAmount);
+                }
+                if (mounds) key = rumour.getAlternateDescriptionKey("mounds");
                 cs.addMessage(owner,
-                     new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                      key, owner, this));
-                cs.addAttribute(See.only(owner),
-                                "sound", "sound.event.fountainOfYouth");
-            }
-            break;
-        case NO_SUCH_RUMOUR: case MOUNDS:
-        default:
-            logger.warning("Bogus rumour type: " + rumour);
-            break;
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner,
+                                ((newUnit != null) ? newUnit : this))
+                                .addAmount("%money%", ruinsAmount));
+                break;
+            case FOUNTAIN_OF_YOUTH:
+                ServerEurope europe = (ServerEurope)owner.getEurope();
+                if (europe == null) {
+                    // FoY should now be disabled for non-colonial
+                    // players, but leave this in for now as it is harmless.
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    rumour.getAlternateDescriptionKey("noEurope"),
+                                    owner, this));
+                } else {
+                    if (owner.isAI()) { // FIXME: let the AI select
+                        europe.generateFountainRecruits(dx, random);
+                        cs.add(See.only(owner), europe);
+                    } else {
+                        // Remember, and ask player to select
+                        ((ServerPlayer)owner).setRemainingEmigrants(dx);
+                        cs.add(See.only(owner),
+                                new FountainOfYouthMessage(dx));
+                    }
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, this));
+                    cs.addAttribute(See.only(owner),
+                            "sound", "sound.event.fountainOfYouth");
+                }
+                break;
+
+            case GIVE_ARTILLERY:
+                List<UnitType> bombardUnitTypes
+                        = spec.getUnitTypesWithAbility(Ability.BOMBARD);
+                unitType = getRandomMember(logger, "Choose artillery",
+                        bombardUnitTypes, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);//-vis: safe, scout on tile
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit).addName("%piece%", newUnit.getType()));
+                break;
+            case GIVE_BOAT:
+                ServerEurope playerEurope = (ServerEurope)owner.getEurope();
+                if (playerEurope == null) {
+                    // FoY should now be disabled for non-colonial
+                    // players, but leave this in for now as it is harmless.
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    rumour.getAlternateDescriptionKey("noEurope"),
+                                    owner, this));
+                } else {
+                    Unit u = playerEurope.generateFreeBoat(random);
+                    cs.add(See.only(owner), playerEurope);
+                    System.out.println(playerEurope.getNameKey());
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, u)
+                                    .addName("%boat%", u.getType()));
+                }
+                break;
+            case GIVE_WAGON:
+                List<UnitType> carry
+                        = spec.getUnitTypesWithAbility(Ability.ONLY_GOODS);
+                unitType = getRandomMember(logger, "Choose Wagon ",
+                        carry, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit).addName("%wagon%", newUnit.getType()));
+                break;
+            case NO_SUCH_RUMOUR: case MOUNDS:
+            default:
+                logger.warning("Bogus rumour type: " + rumour);
+                break;
         }
         tile.cacheUnseen();//+til
         tile.removeLostCityRumour();//-til
@@ -656,17 +699,17 @@ public class ServerUnit extends Unit implements TurnTaker {
         final Player owner = this.getOwner();
         Set<ServerPlayer> pending = new HashSet<>();
         for (Tile t : transform(newTile.getSurroundingTiles(1, 1),
-                                nt -> nt != null && nt.isLand())) {
+                nt -> nt != null && nt.isLand())) {
             Settlement settlement = t.getSettlement();
             Unit unit = null;
             ServerPlayer other = (settlement != null)
-                ? (ServerPlayer)settlement.getOwner()
-                : ((unit = t.getFirstUnit()) != null)
-                ? (ServerPlayer)unit.getOwner()
-                : null;
+                    ? (ServerPlayer)settlement.getOwner()
+                    : ((unit = t.getFirstUnit()) != null)
+                    ? (ServerPlayer)unit.getOwner()
+                    : null;
             if (other == null
-                || other == owner
-                || pending.contains(other)) continue; // No contact
+                    || other == owner
+                    || pending.contains(other)) continue; // No contact
             if (((ServerPlayer)owner).csContact(other, cs)) {
                 // First contact.  Note contact pending because
                 // European first contact now requires a diplomacy
@@ -676,12 +719,12 @@ public class ServerUnit extends Unit implements TurnTaker {
                 if (owner.isEuropean()) {
                     if (other.isIndian()) {
                         Tile offer = (firstLanding && other.owns(newTile))
-                            ? newTile
-                            : null;
+                                ? newTile
+                                : null;
                         ((ServerPlayer)owner).csNativeFirstContact(other, offer, cs);
                     } else {
                         ((ServerPlayer)owner).csEuropeanFirstContact(this,
-                            settlement, unit, cs);
+                                settlement, unit, cs);
                     }
                 } else {
                     if (other.isIndian()) {
@@ -696,32 +739,32 @@ public class ServerUnit extends Unit implements TurnTaker {
             // notify of contact.
             Player contactPlayer = owner;
             IndianSettlement is = (settlement instanceof IndianSettlement)
-                ? (IndianSettlement)settlement
-                : null;
+                    ? (IndianSettlement)settlement
+                    : null;
             if (is != null
-                || (unit != null
+                    || (unit != null
                     && (is = unit.getHomeIndianSettlement()) != null)
-                || (unit != null
+                    || (unit != null
                     && (contactPlayer = unit.getOwner()).isEuropean()
                     && (is = getHomeIndianSettlement()) != null
                     && is.getTile() != null)) {
                 Tile copied = is.getTile().getTileToCache();
                 if (contactPlayer.hasExplored(is.getTile())
-                    && is.setContacted(contactPlayer)) {//-til
+                        && is.setContacted(contactPlayer)) {//-til
                     is.getTile().cacheUnseen(copied);//+til
                     cs.add(See.only(contactPlayer), is);
                     // First European contact with native settlement.
                     StringTemplate nation = is.getOwner().getNationLabel();
                     cs.addMessage(contactPlayer,
-                        new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                            "model.unit.nativeSettlementContact",
-                            this, is)
-                        .addStringTemplate("%nation%", nation)
-                        .addName("%settlement%", is.getName()));
+                            new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                                    "model.unit.nativeSettlementContact",
+                                    this, is)
+                                    .addStringTemplate("%nation%", nation)
+                                    .addName("%settlement%", is.getName()));
                     logger.finest("First contact between "
-                        + contactPlayer.getId()
-                        + " and " + is + " at " + newTile);
-                }                   
+                            + contactPlayer.getId()
+                            + " and " + is + " at " + newTile);
+                }
             }
             csActivateSentries(t, cs);
         }
@@ -735,7 +778,7 @@ public class ServerUnit extends Unit implements TurnTaker {
      */
     private void csActivateSentries(Tile tile, ChangeSet cs) {
         for (Unit u : transform(tile.getUnits(),
-                                matchKey(UnitState.SENTRY, Unit::getState))) {
+                matchKey(UnitState.SENTRY, Unit::getState))) {
             u.setState(UnitState.ACTIVE);
             cs.add(See.perhaps(), u);
         }
@@ -773,9 +816,9 @@ public class ServerUnit extends Unit implements TurnTaker {
         } else {
             if (getMoveCost(newTile) <= 0) {
                 logger.warning("Move of unit: " + getId()
-                    + " from: " + oldLocation.getTile().getId()
-                    + " to: " + newTile.getId()
-                    + " has bogus cost: " + getMoveCost(newTile));
+                        + " from: " + oldLocation.getTile().getId()
+                        + " to: " + newTile.getId()
+                        + " has bogus cost: " + getMoveCost(newTile));
                 setMovesLeft(0);
             }
             setMovesLeft(getMovesLeft() - getMoveCost(newTile));
@@ -787,9 +830,9 @@ public class ServerUnit extends Unit implements TurnTaker {
         }
         setLocation(newTile);//-vis(serverPlayer),-til if in colony
         if (newTile.hasLostCityRumour() && owner.isEuropean()
-            && !csExploreLostCityRumour(random, cs)) {
+                && !csExploreLostCityRumour(random, cs)) {
             this.csRemove(See.perhaps().always(owner),
-                oldLocation, cs);//-vis(serverPlayer)
+                    oldLocation, cs);//-vis(serverPlayer)
         }
         owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
@@ -803,9 +846,9 @@ public class ServerUnit extends Unit implements TurnTaker {
         // make no discoveries.  Always update the new tile.
         if (oldLocation.getTile() != null) {
             cs.addMove(See.perhaps().always(owner), this,
-                       oldLocation, newTile);
+                    oldLocation, newTile);
             cs.add(See.perhaps().always(owner),
-                   (FreeColGameObject)oldLocation);
+                    (FreeColGameObject)oldLocation);
         } else {
             cs.add(See.only(owner), (FreeColGameObject)oldLocation);
         }
@@ -820,13 +863,13 @@ public class ServerUnit extends Unit implements TurnTaker {
             // Claim land for tribe?
             if ((newTile.getOwner() == null
                     || (newTile.getOwner().isEuropean()
-                        && newTile.getOwningSettlement() == null))
-                && owner.isIndian()
-                && (settlement = getHomeIndianSettlement()) != null
-                && ((d = newTile.getDistanceTo(settlement.getTile()))
+                    && newTile.getOwningSettlement() == null))
+                    && owner.isIndian()
+                    && (settlement = getHomeIndianSettlement()) != null
+                    && ((d = newTile.getDistanceTo(settlement.getTile()))
                     < (settlement.getRadius()
-                        + settlement.getType().getExtraClaimableRadius()))
-                && randomInt(logger, "Claim tribal land", random, d + 1) == 0) {
+                    + settlement.getType().getExtraClaimableRadius()))
+                    && randomInt(logger, "Claim tribal land", random, d + 1) == 0) {
                 newTile.cacheUnseen();//+til
                 newTile.changeOwnership(owner, settlement);//-til
             }
@@ -840,9 +883,9 @@ public class ServerUnit extends Unit implements TurnTaker {
                 // The user setNewLandName can override.
                 owner.setNewLandName(newLand);
                 cs.add(See.only(owner),
-                       new NewLandNameMessage(this, newLand));
+                        new NewLandNameMessage(this, newLand));
                 logger.finest("First landing for " + owner
-                    + " at " + newTile + " with " + this);
+                        + " at " + newTile + " with " + this);
             }
 
             // Check for new contacts.
@@ -850,33 +893,33 @@ public class ServerUnit extends Unit implements TurnTaker {
         } else { // water
             for (Tile t : transform(newTile.getSurroundingTiles(1, 1),
                     nt -> (nt != null && !nt.isLand()
-                        && nt.getFirstUnit() != null
-                        && nt.getFirstUnit().getOwner() != owner))) {
+                            && nt.getFirstUnit() != null
+                            && nt.getFirstUnit().getOwner() != owner))) {
                 csActivateSentries(t, cs);
             }
         }
 
         // Disembark in colony.
         if (isCarrier() && !isEmpty() && newTile.getColony() != null
-            && getSpecification().getBoolean(GameOptions.DISEMBARK_IN_COLONY)) {
+                && getSpecification().getBoolean(GameOptions.DISEMBARK_IN_COLONY)) {
             for (Unit u : getUnitList()) {
                 ((ServerUnit)u).csMove(newTile, random, cs);
             }
             setMovesLeft(0);
         }
-                
+
         // Check for slowing units.
         Unit slowedBy = getSlowedBy(newTile, random);
         if (slowedBy != null) {
             StringTemplate enemy = slowedBy.getApparentOwnerName();
             cs.addMessage(owner,
-                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                                 "model.unit.slowed", this, slowedBy)
-                    .addStringTemplate("%unit%",
-                        getLabel(UnitLabelType.NATIONAL))
-                    .addStringTemplate("%enemyUnit%",
-                        slowedBy.getLabel(UnitLabelType.PLAIN))
-                    .addStringTemplate("%enemyNation%", enemy));
+                    new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                            "model.unit.slowed", this, slowedBy)
+                            .addStringTemplate("%unit%",
+                                    getLabel(UnitLabelType.NATIONAL))
+                            .addStringTemplate("%enemyUnit%",
+                                    slowedBy.getLabel(UnitLabelType.PLAIN))
+                            .addStringTemplate("%enemyNation%", enemy));
         }
 
         csCheckDiscoverRegion(newTile, cs);
@@ -892,13 +935,13 @@ public class ServerUnit extends Unit implements TurnTaker {
         final Region region = tile.getDiscoverableRegion();
         final Player owner = this.getOwner();
         if (region != null && owner.isEuropean()
-            && region.checkDiscover(this)) {
+                && region.checkDiscover(this)) {
             cs.add(See.only(owner),
-                new NewRegionNameMessage(region, tile, this,
-                    owner.getNameForRegion(region)));
+                    new NewRegionNameMessage(region, tile, this,
+                            owner.getNameForRegion(region)));
         }
     }
-        
+
     /**
      * Visits a native settlement, possibly scouting it fully if
      * as a result of a scout actually asking to speak to the chief,
@@ -963,26 +1006,26 @@ public class ServerUnit extends Unit implements TurnTaker {
         final Specification spec = getSpecification();
         final Player owner = getOwner();
         final Location loc = getLocation();
-        
+
         boolean locDirty = false;
         boolean unitDirty = false;
         lb.add(this);
 
         // Attrition.  Do it first as the unit might die.
         if (getType().hasMaximumAttrition() && loc instanceof Tile
-            && !((Tile)loc).hasSettlement()) {
+                && !((Tile)loc).hasSettlement()) {
             int attrition = getAttrition() + 1;
             setAttrition(attrition);
             if (attrition > getType().getMaximumAttrition()) {
                 cs.addMessage(owner,
-                    new ModelMessage(ModelMessage.MessageType.UNIT_LOST,
-                                     "model.unit.attrition", this)
-                        .addStringTemplate("%unit%", getLabel())
-                        .addStringTemplate("%location%",
-                            loc.getLocationLabelFor(owner)));
+                        new ModelMessage(ModelMessage.MessageType.UNIT_LOST,
+                                "model.unit.attrition", this)
+                                .addStringTemplate("%unit%", getLabel())
+                                .addStringTemplate("%location%",
+                                        loc.getLocationLabelFor(owner)));
                 cs.add(See.perhaps(), (Tile)loc);
                 this.csRemove(See.perhaps().always(owner),
-                              loc, cs);//-vis(owner)
+                        loc, cs);//-vis(owner)
                 owner.invalidateCanSeeTiles();//+vis(owner)
                 lb.add(", ");
                 return;
@@ -996,24 +1039,24 @@ public class ServerUnit extends Unit implements TurnTaker {
         UnitType learn;
         UnitTypeChange uc;
         if (isInColony()
-            && (produce = getWorkType()) != null
-            && (learn = spec.getExpertForProducing(produce)) != null
-            && learn != getType()
-            && (uc = getUnitChange(UnitChangeType.EXPERIENCE,learn)) != null
-            && uc.probability > 0) {
+                && (produce = getWorkType()) != null
+                && (learn = spec.getExpertForProducing(produce)) != null
+                && learn != getType()
+                && (uc = getUnitChange(UnitChangeType.EXPERIENCE,learn)) != null
+                && uc.probability > 0) {
             int maximumExperience = getType().getMaximumExperience();
             int maxValue = (100 * maximumExperience) / uc.probability;
             if (maxValue > 0
-                && randomInt(logger, "Experience", random, maxValue)
-                < Math.min(getExperience(), maximumExperience)) {
+                    && randomInt(logger, "Experience", random, maxValue)
+                    < Math.min(getExperience(), maximumExperience)) {
                 StringTemplate oldName = getLabel();
                 changeType(learn);//-vis: safe within colony
                 cs.addMessage(owner,
-                    new ModelMessage(ModelMessage.MessageType.UNIT_IMPROVED,
-                                     "model.unit.experience", getColony(), this)
-                        .addStringTemplate("%oldName%", oldName)
-                        .addStringTemplate("%unit%", getLabel())
-                        .addName("%colony%", getColony().getName()));
+                        new ModelMessage(ModelMessage.MessageType.UNIT_IMPROVED,
+                                "model.unit.experience", getColony(), this)
+                                .addStringTemplate("%oldName%", oldName)
+                                .addStringTemplate("%unit%", getLabel())
+                                .addName("%colony%", getColony().getName()));
                 lb.add(" experience upgrade to ", getType());
                 unitDirty = true;
             }
@@ -1032,34 +1075,34 @@ public class ServerUnit extends Unit implements TurnTaker {
         if (getWorkLeft() > 0) {
             unitDirty = true;
             switch (getState()) {
-            case IMPROVING:
-                // Has the improvement been completed already? Do nothing.
-                TileImprovement ti = getWorkImprovement();
-                if (ti == null // Another unit on the tile completed it first
-                    || ti.isComplete()) {
-                    setState(UnitState.ACTIVE);
-                    setWorkLeft(-1);
-                } else {
-                    // Otherwise do work
-                    int amount = (getType().hasAbility(Ability.EXPERT_PIONEER))
-                        ? 2 : 1;
-                    int turns = ti.getTurnsToComplete();
-                    if ((turns -= amount) < 0) turns = 0;
-                    ti.setTurnsToComplete(turns);
-                    setWorkLeft(turns);
-                    if (ti.isRoad() && ti.isComplete()) {
-                        ti.updateRoadConnections(true);
-                        for (Tile t : transform(loc.getTile().getSurroundingTiles(1,1),
-                                                Tile::hasRoad)) {
-                            cs.add(See.perhaps(), t);
+                case IMPROVING:
+                    // Has the improvement been completed already? Do nothing.
+                    TileImprovement ti = getWorkImprovement();
+                    if (ti == null // Another unit on the tile completed it first
+                            || ti.isComplete()) {
+                        setState(UnitState.ACTIVE);
+                        setWorkLeft(-1);
+                    } else {
+                        // Otherwise do work
+                        int amount = (getType().hasAbility(Ability.EXPERT_PIONEER))
+                                ? 2 : 1;
+                        int turns = ti.getTurnsToComplete();
+                        if ((turns -= amount) < 0) turns = 0;
+                        ti.setTurnsToComplete(turns);
+                        setWorkLeft(turns);
+                        if (ti.isRoad() && ti.isComplete()) {
+                            ti.updateRoadConnections(true);
+                            for (Tile t : transform(loc.getTile().getSurroundingTiles(1,1),
+                                    Tile::hasRoad)) {
+                                cs.add(See.perhaps(), t);
+                            }
+                            locDirty = true;
                         }
-                        locDirty = true;
                     }
-                }
-                break;
-            default:
-                setWorkLeft(getWorkLeft() - 1);
-                break;
+                    break;
+                default:
+                    setWorkLeft(getWorkLeft() - 1);
+                    break;
             }
 
             if (loc instanceof HighSeas && getOwner().isREF()) {
@@ -1083,10 +1126,10 @@ public class ServerUnit extends Unit implements TurnTaker {
                     if (getTradeRoute() == null) {
                         setDestination(null);
                         cs.addMessage(owner,
-                            new ModelMessage(ModelMessage.MessageType.UNIT_ARRIVED,
-                                             "model.unit.arriveInEurope",
-                                             europe, this)
-                                .addNamed("%europe%", europe));
+                                new ModelMessage(ModelMessage.MessageType.UNIT_ARRIVED,
+                                        "model.unit.arriveInEurope",
+                                        europe, this)
+                                        .addNamed("%europe%", europe));
                     }
                     setState(UnitState.ACTIVE);
                     setLocation(europe);//-vis: safe/Europe
@@ -1095,7 +1138,7 @@ public class ServerUnit extends Unit implements TurnTaker {
                 } else {
                     if (!(result instanceof Tile)) {
                         logger.warning("Unit has unsupported destination: "
-                            + dst + " -> " + result);
+                                + dst + " -> " + result);
                         result = getFullEntryLocation();
                     }
                     Tile tile = result.getTile().getSafeTile(owner, random);
@@ -1109,22 +1152,22 @@ public class ServerUnit extends Unit implements TurnTaker {
                 }
             } else {
                 switch (getState()) {
-                case ACTIVE: case FORTIFIED: case SENTRY: case IN_COLONY:
-                    break; // These states are stable
-                case IMPROVING:
-                    csImproveTile(random, cs);
-                    setWorkImprovement(null);
-                    locDirty = true;
-                    break;
-                case FORTIFYING:
-                    setState(UnitState.FORTIFIED);
-                    unitDirty = true;
-                    break;
-                case SKIPPED: default:
-                    lb.add(" work completed, bad state: ", getState());
-                    setState(UnitState.ACTIVE);
-                    unitDirty = true;
-                    break;
+                    case ACTIVE: case FORTIFIED: case SENTRY: case IN_COLONY:
+                        break; // These states are stable
+                    case IMPROVING:
+                        csImproveTile(random, cs);
+                        setWorkImprovement(null);
+                        locDirty = true;
+                        break;
+                    case FORTIFYING:
+                        setState(UnitState.FORTIFIED);
+                        unitDirty = true;
+                        break;
+                    case SKIPPED: default:
+                        lb.add(" work completed, bad state: ", getState());
+                        setState(UnitState.ACTIVE);
+                        unitDirty = true;
+                        break;
                 }
             }
         }
@@ -1135,7 +1178,7 @@ public class ServerUnit extends Unit implements TurnTaker {
             cs.add(See.perhaps(), this);
         } else {
             cs.addPartial(See.only(owner), this,
-                "movesLeft", String.valueOf(this.getMovesLeft()));
+                    "movesLeft", String.valueOf(this.getMovesLeft()));
         }
         lb.add(", ");
     }
