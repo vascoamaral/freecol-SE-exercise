@@ -126,6 +126,10 @@ public class MapGeneratorOptions {
     public static final String FOREST_NUMBER 
         = "model.option.forestNumber";
 
+    /** Option for setting the percentage of treasures on the map. */
+    public static final String TREASURE_NUMBER
+            = "model.option.treasureNumber";
+
     /** Option for setting the percentage of bonus tiles on the map. */
     public static final String BONUS_NUMBER 
         = "model.option.bonusNumber";
