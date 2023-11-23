@@ -25,16 +25,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import net.sf.freecol.common.FreeColException;
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractGoods;
-import net.sf.freecol.common.model.AbstractUnit;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitType;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.option.GameOptions;
@@ -243,11 +234,15 @@ public class ServerEurope extends Europe implements TurnTaker {
     public Unit generateFreeBoat(Random random) {
         final Game game = getGame();
         final Player owner = getOwner();
+        Specification spec = game.getSpecification();
         List<RandomChoice<UnitType>> boats = generatePossibleBoatsList();
         UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
                 boats, random);
         System.out.println(ut.getDescriptionKey());
-        return new ServerUnit(game, this, owner, ut);
+        Unit boat = new ServerUnit(game, this, owner, ut);
+        GoodsType t = spec.getGoodsType("model.goods.horses");
+        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t, 50);
+        return boat;
     }
 
     /**

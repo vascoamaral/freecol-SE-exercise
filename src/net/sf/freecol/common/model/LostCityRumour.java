@@ -239,9 +239,9 @@ public class LostCityRumour extends TileItem {
                 c.add(new RandomChoice<>(RumourType.COLONIST,
                         1 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
-                        80 * percentGood));
-                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
                         1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
+                        85 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_WAGON,
                         1* percentGood));
             } else {
@@ -250,11 +250,11 @@ public class LostCityRumour extends TileItem {
                 c.add(new RandomChoice<>(RumourType.COLONIST,
                         3 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
-                        80 * percentGood));
-                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
                         1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
+                        85 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_WAGON,
-                        1* percentGood));
+                        1 * percentGood));
             }
             c.add(new RandomChoice<>(RumourType.MOUNDS,
                     8 * percentGood));

@@ -4155,7 +4155,6 @@ public class Unit extends GoodsLocation
     public Location getLocation() {
         return this.location;
     }
-
     /**
      * Sets the location of this unit.
      *

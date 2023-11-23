@@ -2196,6 +2196,8 @@
                value="true"/>
       <ability id="model.ability.bombard"
                value="true"/>
+      <ability id="model.ability.normalBombard"
+               value="true"/>
     </unit-type>
     <unit-type id="model.unit.damagedArtillery" extends="wagon"
                offence="5" defence="3" movement="3"
@@ -2203,6 +2205,8 @@
       <ability id="model.ability.captureUnits"
                value="true"/>
       <ability id="model.ability.bombard"
+               value="true"/>
+      <ability id="model.ability.damagedBombard"
                value="true"/>
     </unit-type>
     <unit-type id="model.unit.treasureTrain" extends="wagon"

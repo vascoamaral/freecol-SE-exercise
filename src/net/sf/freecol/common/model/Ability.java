@@ -93,6 +93,12 @@ public final class Ability extends Feature {
     /** The ability of a unit to bombard other units. */
     public static final String BOMBARD
             = "model.ability.bombard";
+    /** The ability of a unit to bombard other units. */
+    public static final String DAMAGED_BOMBARD
+            = "model.ability.damagedBombard";
+    /** The ability of a unit to bombard other units. */
+    public static final String NORMAL_BOMBARD
+            = "model.ability.normalBombard";
 
     /** The ability of a colony to bombard ships. */
     public static final String BOMBARD_SHIPS

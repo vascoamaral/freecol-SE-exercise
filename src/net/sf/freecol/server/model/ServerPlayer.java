@@ -1265,6 +1265,30 @@ public class ServerPlayer extends Player implements TurnTaker {
         }
         return marketAmount;
     }
+    public int stealInEurope(Random random, GoodsContainer container,
+                           GoodsType type, int amount) {
+        final Market market = getMarket();
+        int marketAmount = 0;
+        while (amount > 0) {
+            // Always break up into chunks, so the price can adjust
+            // dynamically during large transactions, avoiding
+            // exploitable market manipulation.
+            int a = (amount <= GoodsContainer.CARGO_SIZE) ? amount
+                    : GoodsContainer.CARGO_SIZE;
+            int price = market.getBidPrice(type, a);
+            market.modifySales(type, -a);
+            if (container != null) container.addGoods(type, a);
+            market.modifyIncomeBeforeTaxes(type, -price);
+            market.modifyIncomeAfterTaxes(type, -price);
+            int ma = (int)apply((float)a, getGame().getTurn(),
+                    Modifier.TRADE_BONUS, type);
+            market.addGoodsToMarket(type, -ma);
+            marketAmount += ma;
+            propagateToEuropeanMarkets(type, -a, random);
+            amount -= a;
+        }
+        return marketAmount;
+    }
 
     /**
      * Sell goods in Europe.

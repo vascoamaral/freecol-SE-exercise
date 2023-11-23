@@ -28,44 +28,8 @@ import java.util.logging.Logger;
 
 import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.i18n.NameCache;
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractGoods;
-import net.sf.freecol.common.model.Colony;
-import net.sf.freecol.common.model.CombatModel;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.FreeColGameObject;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.GoodsContainer;
-import net.sf.freecol.common.model.GoodsType;
-import net.sf.freecol.common.model.HighSeas;
-import net.sf.freecol.common.model.HistoryEvent;
-import net.sf.freecol.common.model.IndianSettlement;
-import net.sf.freecol.common.model.Location;
-import net.sf.freecol.common.model.LostCityRumour;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.LostCityRumour.RumourType;
-import net.sf.freecol.common.model.Map;
-import net.sf.freecol.common.model.ModelMessage;
-import net.sf.freecol.common.model.Modifier;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Stance;
-import net.sf.freecol.common.model.Region;
-import net.sf.freecol.common.model.Resource;
-import net.sf.freecol.common.model.ResourceType;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Settlement;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.StringTemplate;
-import net.sf.freecol.common.model.Tension;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.TileImprovement;
-import net.sf.freecol.common.model.TileImprovementType;
-import net.sf.freecol.common.model.TileType;
-import net.sf.freecol.common.model.Turn;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitChangeType;
-import net.sf.freecol.common.model.UnitTypeChange;
-import net.sf.freecol.common.model.UnitType;
-import net.sf.freecol.common.model.WorkLocation;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.networking.FountainOfYouthMessage;
@@ -638,11 +602,11 @@ public class ServerUnit extends Unit implements TurnTaker {
 
             case GIVE_ARTILLERY:
                 List<UnitType> bombardUnitTypes
-                        = spec.getUnitTypesWithAbility(Ability.BOMBARD);
+                        = spec.getUnitTypesWithAbility(Ability.DAMAGED_BOMBARD);
                 unitType = getRandomMember(logger, "Choose artillery",
                         bombardUnitTypes, random);
                 newUnit = new ServerUnit(game, tile, owner,
-                        unitType);//-vis: safe, scout on tile
+                        unitType);
                 cs.addMessage(owner,
                         new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
                                 key, owner, newUnit).addName("%piece%", newUnit.getType()));
