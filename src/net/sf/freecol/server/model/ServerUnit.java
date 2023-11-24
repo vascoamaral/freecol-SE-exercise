@@ -38,6 +38,8 @@ import net.sf.freecol.common.networking.NewRegionNameMessage;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.util.LogBuilder;
 import net.sf.freecol.common.util.RandomChoice;
+import net.sf.freecol.server.networking.Server;
+
 import static net.sf.freecol.common.util.CollectionUtils.*;
 import static net.sf.freecol.common.util.RandomUtils.*;
 
@@ -800,6 +802,20 @@ public class ServerUnit extends Unit implements TurnTaker {
         }
         owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
+        // Claim treasure
+        final Specification spec = newTile.getGame().getSpecification();
+        if(newTile.getResource() != null){
+            if(newTile.getResource().getType().equals(spec.getResourceType("model.resource.treasureChest"))){
+                owner.modifyGold(calculateTreasureGold());
+                cs.addPartial(See.only(owner), owner,
+                        "gold", String.valueOf(owner.getGold()),
+                        "score", String.valueOf(owner.getScore()));
+
+                //TODO adicionar mensagem de gold
+                newTile.removeResource();
+            }
+        }
+
         // Update tiles that are now invisible.
         removeInPlace(oldTiles, t -> owner.canSee(t));
         if (!oldTiles.isEmpty()) cs.add(See.only(owner), oldTiles);
@@ -887,6 +903,10 @@ public class ServerUnit extends Unit implements TurnTaker {
         }
 
         csCheckDiscoverRegion(newTile, cs);
+    }
+
+    private int calculateTreasureGold(){
+        return getGame().getTurn().getNumber()*2; // TODO alterar para um calculo mais razoavel
     }
 
     /**
