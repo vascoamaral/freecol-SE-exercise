@@ -401,6 +401,7 @@ public class ServerUnit extends Unit implements TurnTaker {
      * @param cs A {@code ChangeSet} to add changes to.
      * @return True if the unit survives.
      */
+    //SPLIT SPLIT SPLIT
     private boolean csExploreLostCityRumour(Random random, ChangeSet cs) {
         final Player owner = getOwner();
         Tile tile = getTile();
@@ -417,7 +418,7 @@ public class ServerUnit extends Unit implements TurnTaker {
                 = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
 
 
-        RumourType rumour = lostCity.getType();
+        LostCityRumour.RumourType rumour = lostCity.getType();
         if (rumour == null) {
             rumour = lostCity.chooseType(this, random);
         }
@@ -486,6 +487,8 @@ public class ServerUnit extends Unit implements TurnTaker {
                         new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
                                 key, owner));
                 result = false;
+                cs.addAttribute(See.only(owner),
+                        "sound", "sound.event.colony");
                 break;
             case NOTHING:
                 cs.addMessage(owner,
@@ -503,6 +506,8 @@ public class ServerUnit extends Unit implements TurnTaker {
                                 key, owner, this)
                                 .addStringTemplate("%unit%", oldName)
                                 .addNamed("%type%", getType()));
+                cs.addAttribute(See.only(owner),
+                        "sound", "sound.event.building");
                 break;
             case TRIBAL_CHIEF:
                 int chiefAmount = randomInt(logger, "Chief base amount",
@@ -517,7 +522,10 @@ public class ServerUnit extends Unit implements TurnTaker {
                                 key, owner, this)
                                 .addAmount("%money%", chiefAmount));
                 owner.invalidateCanSeeTiles();//+vis(serverPlayer)
+                cs.addAttribute(See.only(owner),
+                        "sound", "sound.meet.aztec");
                 break;
+
             case COLONIST:
                 List<UnitType> foundTypes
                         = spec.getUnitTypesWithAbility(Ability.FOUND_IN_LOST_CITY);
@@ -625,11 +633,11 @@ public class ServerUnit extends Unit implements TurnTaker {
                 } else {
                     Unit u = playerEurope.generateFreeBoat(random);
                     cs.add(See.only(owner), playerEurope);
-                    System.out.println(playerEurope.getNameKey());
                     cs.addMessage(owner,
                             new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
                                     key, owner, u)
                                     .addName("%boat%", u.getType()));
+
                 }
                 break;
             case GIVE_WAGON:
@@ -650,6 +658,186 @@ public class ServerUnit extends Unit implements TurnTaker {
         }
         tile.cacheUnseen();//+til
         tile.removeLostCityRumour();//-til
+        return result;
+    }
+    private boolean csExploreRuinedLostCityRumour(Random random, ChangeSet cs) {
+        final Player owner = getOwner();
+        Tile tile = getTile();
+        RuinedLostCityRumour lostCity =  tile.getRuinedLostCityRumour();
+        if (lostCity == null) return true;
+
+        Game game = getGame();
+        Specification spec = game.getSpecification();
+        int difficulty = spec.getInteger(GameOptions.RUMOUR_DIFFICULTY);
+        int dx = 10 - difficulty;
+        UnitType unitType;
+        Unit newUnit = null;
+        RuinedLostCityRumour.RumourType rumour = lostCity.getType();
+        if (rumour == null) {
+            rumour = lostCity.chooseType(this, random);
+        }
+        // Filter out failing cases that could only occur if the
+        // type was explicitly set in debug mode.
+
+        // Mounds are a special case that degrade to other cases.
+        boolean mounds = rumour == RuinedLostCityRumour.RumourType.MOUNDS;
+        if (mounds) {
+            boolean done = false;
+            boolean nothing = false;
+            while (!done) {
+                rumour = lostCity.chooseType(this, random);
+                switch (rumour) {
+                    case NOTHING: // Do not accept nothing-result the first time.
+                        if (nothing) {
+                            done = true;
+                        } else {
+                            nothing = true;
+                        }
+                        break;
+                    case EXPEDITION_VANISHES: case TRIBAL_CHIEF:
+                        done = true;
+                        break;
+                    // Fall through
+                    case BURIAL_GROUND:
+                        done = tile.getOwner() != null
+                                && tile.getOwner().isIndian();
+                        break;
+                    default:
+                        ; // unacceptable result for mounds
+                }
+            }
+        }
+
+        logger.info("Unit " + getId() + " is exploring rumour " + rumour);
+        boolean result = true;
+        String key = rumour.getDescriptionKey();
+        switch (rumour) {
+            case BURIAL_GROUND:
+                csNativeBurialGround(cs);
+                break;
+            case EXPEDITION_VANISHES:
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner));
+                result = false;
+                break;
+            case FOUNTAIN_OF_YOUTH:
+                ServerEurope europe = (ServerEurope)owner.getEurope();
+                if (europe == null) {
+                    // FoY should now be disabled for non-colonial
+                    // players, but leave this in for now as it is harmless.
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    rumour.getAlternateDescriptionKey("noEurope"),
+                                    owner, this));
+                } else {
+                    if (owner.isAI()) { // FIXME: let the AI select
+                        europe.generateFountainRecruits(dx, random);
+                        cs.add(See.only(owner), europe);
+                    } else {
+                        // Remember, and ask player to select
+                        ((ServerPlayer)owner).setRemainingEmigrants(dx);
+                        cs.add(See.only(owner),
+                                new FountainOfYouthMessage(dx));
+                    }
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, this));
+                    cs.addAttribute(See.only(owner),
+                            "sound", "sound.event.fountainOfYouth");
+                }
+                break;
+
+            case GIVE_ARTILLERY:
+                List<UnitType> bombardUnitTypes
+                        = spec.getUnitTypesWithAbility(Ability.NORMAL_BOMBARD);
+                unitType = getRandomMember(logger, "Choose artillery",
+                        bombardUnitTypes, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit).addName("%piece%", newUnit.getType()));
+                cs.addAttribute(See.only(owner),
+                        "sound", "sound.attack.artillery");
+                break;
+
+            case GIVE_DAMAGED_ARTILLERY:
+                List<UnitType> damagedBombardUnitTypes
+                        = spec.getUnitTypesWithAbility(Ability.DAMAGED_BOMBARD);
+                unitType = getRandomMember(logger, "Choose artillery",
+                        damagedBombardUnitTypes, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit).addName("%piece%", newUnit.getType()));
+                cs.addAttribute(See.only(owner),
+                        "sound", "sound.attack.artillery");
+                break;
+            case GIVE_BOAT:
+                ServerEurope playerEurope = (ServerEurope)owner.getEurope();
+                if (playerEurope == null) {
+                    // FoY should now be disabled for non-colonial
+                    // players, but leave this in for now as it is harmless.
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    rumour.getAlternateDescriptionKey("noEurope"),
+                                    owner, this));
+                } else {
+                    Unit u = playerEurope.generateFreeBoat(random);
+                    cs.add(See.only(owner), playerEurope);
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, u)
+                                    .addName("%boat%", u.getType()));
+                    cs.addAttribute(See.only(owner),
+                            "sound", "sound.anthem.portuguese");
+                }
+                break;
+            case GIVE_ARMED_BOAT:
+                ServerEurope pEurope = (ServerEurope)owner.getEurope();
+                if (pEurope == null) {
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    rumour.getAlternateDescriptionKey("noEurope"),
+                                    owner, this));
+                } else {
+                    Unit u = pEurope.generateFreeArmedBoat(random);
+                    cs.add(See.only(owner), pEurope);
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                    key, owner, u)
+                                    .addName("%boat%", u.getType())
+                                    .addName("%equipment1%", u.getGoodsContainer().getGoodsList().get(0))
+                                    .addName("%equipment2%", u.getGoodsContainer().getGoodsList().get(1))
+                                    .addAmount("%q1%", u.getGoodsContainer().getGoodsList().get(0).getAmount())
+                                    .addAmount("%q2%", u.getGoodsContainer().getGoodsList().get(1).getAmount()));
+                    cs.addAttribute(See.only(owner),
+                            "sound", "sound.attack.artillery");
+                }
+
+                break;
+
+
+            case GIVE_WAGON:
+                List<UnitType> carry
+                        = spec.getUnitTypesWithAbility(Ability.ONLY_GOODS);
+                unitType = getRandomMember(logger, "Choose Wagon ",
+                        carry, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
+                                key, owner, newUnit).addName("%wagon%", newUnit.getType()));
+                break;
+            case NO_SUCH_RUMOUR: case MOUNDS:
+            default:
+                logger.warning("Bogus rumour type: " + rumour);
+                break;
+        }
+        tile.cacheUnseen();//+til
+        tile.removeRuinedLostCityRumour();//-til
         return result;
     }
 
@@ -797,6 +985,12 @@ public class ServerUnit extends Unit implements TurnTaker {
         setLocation(newTile);//-vis(serverPlayer),-til if in colony
         if (newTile.hasLostCityRumour() && owner.isEuropean()
                 && !csExploreLostCityRumour(random, cs)) {
+            this.csRemove(See.perhaps().always(owner),
+                    oldLocation, cs);//-vis(serverPlayer)
+        }
+        owner.invalidateCanSeeTiles();
+        if (newTile.hasRuinedLostCityRumour() && owner.isEuropean()
+                && !csExploreRuinedLostCityRumour(random, cs)) {
             this.csRemove(See.perhaps().always(owner),
                     oldLocation, cs);//-vis(serverPlayer)
         }

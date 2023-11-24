@@ -22,11 +22,7 @@ package net.sf.freecol.common.networking;
 import javax.xml.stream.XMLStreamException;
 
 import net.sf.freecol.common.io.FreeColXMLReader;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.LostCityRumour;
-import net.sf.freecol.common.model.Direction;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.Unit;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.server.FreeColServer;
 import net.sf.freecol.server.model.ServerPlayer;
 
@@ -50,7 +46,7 @@ public class DeclineMoundsMessage extends AttributeMessage {
      */
     public DeclineMoundsMessage(Unit unit, Direction direction) {
         super(TAG, UNIT_TAG, unit.getId(),
-              DIRECTION_TAG, String.valueOf(direction));
+                DIRECTION_TAG, String.valueOf(direction));
     }
 
     /**
@@ -61,7 +57,7 @@ public class DeclineMoundsMessage extends AttributeMessage {
      * @exception XMLStreamException if the stream is corrupt.
      */
     public DeclineMoundsMessage(Game game, FreeColXMLReader xr)
-        throws XMLStreamException {
+            throws XMLStreamException {
         super(TAG, xr, UNIT_TAG, DIRECTION_TAG);
     }
 
@@ -107,13 +103,19 @@ public class DeclineMoundsMessage extends AttributeMessage {
 
         LostCityRumour rumour = tile.getLostCityRumour();
         if (rumour == null
-            || rumour.getType() != LostCityRumour.RumourType.MOUNDS) {
+                || rumour.getType() != LostCityRumour.RumourType.MOUNDS) {
             return serverPlayer.clientError("No mounds rumour on tile: "
-                + tile.getId());
+                    + tile.getId());
+        }
+        RuinedLostCityRumour rumours = tile.getRuinedLostCityRumour();
+        if (rumours == null
+                || rumours.getType() != RuinedLostCityRumour.RumourType.MOUNDS) {
+            return serverPlayer.clientError("No mounds rumour on tile: "
+                    + tile.getId());
         }
 
         // Clear the mounds.
         return igc(freeColServer)
-            .declineMounds(serverPlayer, tile);
+                .declineMounds(serverPlayer, tile);
     }
 }

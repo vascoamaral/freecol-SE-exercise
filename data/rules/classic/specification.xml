@@ -2112,6 +2112,8 @@
                       value="128"/>
       <required-goods id="model.goods.tools"
                       value="40"/>
+      <ability id="model.ability.caravel"
+               value="true"/>
     </unit-type>
     <unit-type id="model.unit.frigate" extends="ship" price="5000"
                offence="16" defence="16" movement="18"

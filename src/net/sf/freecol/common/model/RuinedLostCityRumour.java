@@ -43,11 +43,11 @@ import static net.sf.freecol.common.util.StringUtils.*;
 /**
  * Represents a lost city rumour.
  */
-public class LostCityRumour extends TileItem {
+public class RuinedLostCityRumour extends TileItem {
 
-    private static final Logger logger = Logger.getLogger(LostCityRumour.class.getName());
+    private static final Logger logger = Logger.getLogger(RuinedLostCityRumour.class.getName());
 
-    public static final String TAG = "lostCityRumour";
+    public static final String TAG = "ruinedLostCityRumour";
 
     // The bogus end of the world year.
     private static final int MAYAN_PROPHESY_YEAR = 2012;
@@ -68,7 +68,8 @@ public class LostCityRumour extends TileItem {
         RUINS,
         CIBOLA,
         FOUNTAIN_OF_YOUTH,
-        GIVE_ARTILLERY, GIVE_BOAT, GIVE_WAGON;
+        GIVE_ARTILLERY, GIVE_BOAT, GIVE_WAGON,GIVE_DAMAGED_ARTILLERY, GIVE_ARMED_BOAT;
+
 
         /**
          * Get the stem key for this LCR type.
@@ -109,7 +110,7 @@ public class LostCityRumour extends TileItem {
      * @param game The enclosing {@code Game}.
      * @param tile The {@code Tile} where the LCR is.
      */
-    public LostCityRumour(Game game, Tile tile) {
+    public RuinedLostCityRumour(Game game, Tile tile) {
         super(game, tile);
     }
 
@@ -121,7 +122,7 @@ public class LostCityRumour extends TileItem {
      * @param type The type of rumour.
      * @param name The name of the rumour.
      */
-    public LostCityRumour(Game game, Tile tile, RumourType type, String name) {
+    public RuinedLostCityRumour(Game game, Tile tile, RumourType type, String name) {
         super(game, tile);
 
 
@@ -135,7 +136,7 @@ public class LostCityRumour extends TileItem {
      * @param game The enclosing {@code Game}.
      * @param id The object identifier.
      */
-    public LostCityRumour(Game game, String id) {
+    public RuinedLostCityRumour(Game game, String id) {
         super(game, id);
     }
 
@@ -231,36 +232,26 @@ public class LostCityRumour extends TileItem {
                 c.add(new RandomChoice<>(RumourType.FOUNTAIN_OF_YOUTH,
                         2 * percentGood));
             }
-            if (allowLearn) {
-                c.add(new RandomChoice<>(RumourType.LEARN,
-                        30 * percentGood));
-                c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
-                        30 * percentGood));
-                c.add(new RandomChoice<>(RumourType.COLONIST,
-                        20 * percentGood));
-            } else {
-                c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
-                        50 * percentGood));
-                c.add(new RandomChoice<>(RumourType.COLONIST,
-                        30 * percentGood));
-            }
+                c.add(new RandomChoice<>(RumourType.GIVE_ARMED_BOAT,
+                        88 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
+                        1 * percentGood));
+                c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
+                        1 * percentGood));
+
             c.add(new RandomChoice<>(RumourType.MOUNDS,
                     8 * percentGood));
-            c.add(new RandomChoice<>(RumourType.RUINS,
-                    6 * percentGood));
-            c.add(new RandomChoice<>(RumourType.CIBOLA,
-                    4 * percentGood));
         }
 
         if (percentBad > 0) { // The BAD
             List<RandomChoice<RumourType>> cbad = new ArrayList<>();
             if (allowBurial) {
-                cbad.add(new RandomChoice<>(RumourType.BURIAL_GROUND,
-                        25 * percentBad));
+                cbad.add(new RandomChoice<>(RumourType.GIVE_DAMAGED_ARTILLERY,
+                        50 * percentBad));
             }
             if (allowVanish) {
-                cbad.add(new RandomChoice<>(RumourType.EXPEDITION_VANISHES,
-                        75 * percentBad));
+                cbad.add(new RandomChoice<>(RumourType.GIVE_WAGON,
+                        50 * percentBad));
             }
             RandomChoice.normalize(cbad, 100);
             c.addAll(cbad);
@@ -408,7 +399,7 @@ public class LostCityRumour extends TileItem {
      */
     @Override
     public <T extends FreeColObject> boolean copyIn(T other) {
-        LostCityRumour o = copyInCast(other, LostCityRumour.class);
+        RuinedLostCityRumour o = copyInCast(other, RuinedLostCityRumour.class);
         if (o == null || !super.copyIn(o)) return false;
         this.type = o.getType();
         this.name = o.getName();

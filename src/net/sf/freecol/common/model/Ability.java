@@ -155,6 +155,9 @@ public final class Ability extends Feature {
     public static final String CAN_RECRUIT_UNIT
             = "model.ability.canRecruitUnit";
 
+    public static final String CARAVEL
+            = "model.ability.caravel";
+
     /** The ability of certain armed units to capture equipment.*/
     public static final String CAPTURE_EQUIPMENT
             = "model.ability.captureEquipment";

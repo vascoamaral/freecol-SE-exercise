@@ -196,6 +196,12 @@ public class ServerEurope extends Europe implements TurnTaker {
                 ut -> new RandomChoice<>(ut, 100));
     }
 
+    private List<RandomChoice<UnitType>> generatePossibleBoatsCaravel() {
+        return transform(getSpecification().getUnitTypeList(),
+                ut ->   ut.isNaval() && ut.hasAbility(Ability.CARAVEL),
+                ut -> new RandomChoice<>(ut, 100));
+    }
+
     /**
      * Replace any non-recruitable recruits.
      *
@@ -238,12 +244,28 @@ public class ServerEurope extends Europe implements TurnTaker {
         List<RandomChoice<UnitType>> boats = generatePossibleBoatsList();
         UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
                 boats, random);
-        System.out.println(ut.getDescriptionKey());
         Unit boat = new ServerUnit(game, this, owner, ut);
         GoodsType t = spec.getGoodsType("model.goods.horses");
         ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t, 50);
         return boat;
     }
+
+    public Unit generateFreeArmedBoat(Random random) {
+        final Game game = getGame();
+        final Player owner = getOwner();
+        Specification spec = game.getSpecification();
+        List<RandomChoice<UnitType>> boats = generatePossibleBoatsCaravel();
+        UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
+                boats, random);
+        Unit boat = new ServerUnit(game, this, owner, ut);
+        GoodsType t1 = spec.getGoodsType("model.goods.horses");
+        GoodsType t2 = spec.getGoodsType("model.goods.muskets");
+        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t1, 100);
+        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t2, 100);
+        return boat;
+    }
+
+
 
     /**
      * Increases the price for a unit.

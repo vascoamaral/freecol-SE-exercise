@@ -112,7 +112,7 @@ public final class ScoutingMission extends Mission {
      */
     private static boolean canScoutNatives(AIUnit aiUnit) {
         return aiUnit.getUnit()
-            .hasAbility(Ability.SPEAK_WITH_CHIEF);
+                .hasAbility(Ability.SPEAK_WITH_CHIEF);
     }
 
     /**
@@ -127,11 +127,11 @@ public final class ScoutingMission extends Mission {
         if (path == null) return null;
         final Location loc = path.getLastNode().getLocation();
         return (loc == null) ? null
-            : (invalidSettlementReason(aiUnit, loc.getSettlement()) == null)
-            ? loc.getSettlement()
-            : (invalidTileReason(aiUnit, loc.getTile()) == null)
-            ? loc.getTile()
-            : null;
+                : (invalidSettlementReason(aiUnit, loc.getSettlement()) == null)
+                ? loc.getSettlement()
+                : (invalidTileReason(aiUnit, loc.getTile()) == null)
+                ? loc.getTile()
+                : null;
     }
 
     /**
@@ -145,12 +145,12 @@ public final class ScoutingMission extends Mission {
     public static int scorePath(AIUnit aiUnit, PathNode path) {
         Location loc = (path == null) ? null : extractTarget(aiUnit, path);
         return (loc instanceof Colony)
-            ? 12 / (path.getTotalTurns() + 1)
-            : (loc instanceof IndianSettlement)
-            ? 2000 / (path.getTotalTurns() + 1)
-            : (loc instanceof Tile && ((Tile)loc).hasLostCityRumour())
-            ? 1000 / (path.getTotalTurns() + 1)
-            : Integer.MIN_VALUE;
+                ? 12 / (path.getTotalTurns() + 1)
+                : (loc instanceof IndianSettlement)
+                ? 2000 / (path.getTotalTurns() + 1)
+                : (loc instanceof Tile && ((Tile)loc).hasLostCityRumour())
+                ? 1000 / (path.getTotalTurns() + 1)
+                : Integer.MIN_VALUE;
     }
 
     /**
@@ -164,31 +164,31 @@ public final class ScoutingMission extends Mission {
     private static GoalDecider getGoalDecider(final AIUnit aiUnit,
                                               boolean deferOK) {
         GoalDecider gd = new GoalDecider() {
-                private PathNode bestPath = null;
-                private int bestValue = Integer.MIN_VALUE;
+            private PathNode bestPath = null;
+            private int bestValue = Integer.MIN_VALUE;
 
-                @Override
-                public PathNode getGoal() { return bestPath; }
-                @Override
-                public boolean hasSubGoals() { return true; }
-                @Override
-                public boolean check(Unit u, PathNode path) {
-                    Location loc = extractTarget(aiUnit, path);
-                    if (loc instanceof IndianSettlement
+            @Override
+            public PathNode getGoal() { return bestPath; }
+            @Override
+            public boolean hasSubGoals() { return true; }
+            @Override
+            public boolean check(Unit u, PathNode path) {
+                Location loc = extractTarget(aiUnit, path);
+                if (loc instanceof IndianSettlement
                         || loc instanceof Tile) {
-                        int value = scorePath(aiUnit, path);
-                        if (bestValue < value) {
-                            bestValue = value;
-                            bestPath = path;
-                            return true;
-                        }
+                    int value = scorePath(aiUnit, path);
+                    if (bestValue < value) {
+                        bestValue = value;
+                        bestPath = path;
+                        return true;
                     }
-                    return false;
                 }
-            };
+                return false;
+            }
+        };
         return (deferOK) ? GoalDeciders.getComposedGoalDecider(false, gd,
-            GoalDeciders.getOurClosestSettlementGoalDecider())
-            : gd;
+                GoalDeciders.getOurClosestSettlementGoalDecider())
+                : gd;
     }
 
     /**
@@ -226,8 +226,8 @@ public final class ScoutingMission extends Mission {
                                              boolean deferOK) {
         PathNode path = findTargetPath(aiUnit, range, deferOK);
         return Location.upLoc((path != null)
-            ? extractTarget(aiUnit, path)
-            : findCircleTarget(aiUnit,
+                ? extractTarget(aiUnit, path)
+                : findCircleTarget(aiUnit,
                 getGoalDecider(aiUnit, deferOK), range*3, deferOK));
     }
 
@@ -242,11 +242,11 @@ public final class ScoutingMission extends Mission {
     public static String prepare(AIUnit aiUnit) {
         String reason = invalidMissionReason(aiUnit);
         return (reason != null) ? reason
-            : (canScoutNatives(aiUnit)
+                : (canScoutNatives(aiUnit)
                 || aiUnit.equipForRole(aiUnit.getUnit().getSpecification()
-                    .getScoutRole())
+                .getScoutRole())
                 || aiUnit.getUnit().hasAbility(Ability.EXPERT_SCOUT)) ? null
-            : "unit-unprepared-to-SCOUT";
+                : "unit-unprepared-to-SCOUT";
     }
 
     /**
@@ -259,8 +259,8 @@ public final class ScoutingMission extends Mission {
     private static String invalidUnitReason(AIUnit aiUnit) {
         String reason = invalidAIUnitReason(aiUnit);
         return (reason != null) ? reason
-            : (!canScoutNatives(aiUnit)) ? "unit-not-a-SCOUT"
-            : null;
+                : (!canScoutNatives(aiUnit)) ? "unit-not-a-SCOUT"
+                : null;
     }
 
     /**
@@ -288,12 +288,12 @@ public final class ScoutingMission extends Mission {
         Tension tension;
         String reason = invalidTargetReason(is);
         return (reason != null) ? reason
-            : (is.hasScouted(owner))
-            ? "settlement-scouted"
-            : ((tension = is.getAlarm(owner)) != null
+                : (is.hasScouted(owner))
+                ? "settlement-scouted"
+                : ((tension = is.getAlarm(owner)) != null
                 && tension.getValue() >= Tension.Level.HATEFUL.getLimit())
-            ? "settlement-hateful"
-            : null;
+                ? "settlement-hateful"
+                : null;
     }
 
     /**
@@ -307,10 +307,10 @@ public final class ScoutingMission extends Mission {
     private static String invalidSettlementReason(AIUnit aiUnit,
                                                   Settlement settlement) {
         return (settlement instanceof Colony)
-            ? invalidColonyReason(aiUnit, (Colony)settlement)
-            : (settlement instanceof IndianSettlement)
-            ? invalidIndianSettlementReason(aiUnit, (IndianSettlement)settlement)
-            : Mission.TARGETINVALID;
+                ? invalidColonyReason(aiUnit, (Colony)settlement)
+                : (settlement instanceof IndianSettlement)
+                ? invalidIndianSettlementReason(aiUnit, (IndianSettlement)settlement)
+                : Mission.TARGETINVALID;
     }
 
     /**
@@ -322,9 +322,10 @@ public final class ScoutingMission extends Mission {
      */
     private static String invalidTileReason(AIUnit aiUnit, Tile tile) {
         return (tile == null) ? "tile-null"
-            : (tile.hasLostCityRumour()) ? null
-            : (!tile.isExploredBy(aiUnit.getUnit().getOwner())) ? null
-            : "explored-tile-lacks-rumour";
+                : (tile.hasLostCityRumour()) ? null
+                : (tile.hasRuinedLostCityRumour()) ? null
+                : (!tile.isExploredBy(aiUnit.getUnit().getOwner())) ? null
+                : "explored-tile-lacks-rumour";
     }
 
     /**
@@ -347,12 +348,12 @@ public final class ScoutingMission extends Mission {
     public static String invalidMissionReason(AIUnit aiUnit, Location loc) {
         String reason = invalidMissionReason(aiUnit);
         return (reason != null)
-            ? reason
-            : (loc instanceof Settlement)
-            ? invalidSettlementReason(aiUnit, (Settlement)loc)
-            : (loc instanceof Tile)
-            ? invalidTileReason(aiUnit, (Tile)loc)
-            : Mission.TARGETINVALID;
+                ? reason
+                : (loc instanceof Settlement)
+                ? invalidSettlementReason(aiUnit, (Settlement)loc)
+                : (loc instanceof Tile)
+                ? invalidTileReason(aiUnit, (Tile)loc)
+                : Mission.TARGETINVALID;
     }
 
 
@@ -381,7 +382,7 @@ public final class ScoutingMission extends Mission {
     @Override
     public void setTarget(Location target) {
         if (target == null || target instanceof Tile
-            || target instanceof Colony) {
+                || target instanceof Colony) {
             this.target = target;
             this.precedingTile = null;
         } else if (target instanceof IndianSettlement) {
@@ -389,14 +390,14 @@ public final class ScoutingMission extends Mission {
             Unit unit = aiUnit.getUnit();
             Tile t = target.getTile();
             if (!unit.hasTile()
-                || unit.getTile().getContiguity() != t.getContiguity()) {
+                    || unit.getTile().getContiguity() != t.getContiguity()) {
                 // Not going to be able to walk there, so we will need to take
                 // a carrier, but that means going first to a tile adjacent
                 // to the settlement, which we were not doing in BR#3228.
                 List<Tile> tiles = toList(t.getContiguityAdjacent(t.getContiguity()));
                 List<Tile> coast = transform(tiles, Tile::isCoastland);
                 this.precedingTile = getRandomMember(logger, "scout-tile",
-                    (coast.isEmpty()) ? tiles : coast, aiUnit.getAIRandom());
+                        (coast.isEmpty()) ? tiles : coast, aiUnit.getAIRandom());
             } else {
                 this.precedingTile = null;
             }
@@ -438,62 +439,62 @@ public final class ScoutingMission extends Mission {
         final Unit unit = getUnit();
         Direction d;
         Unit.MoveType mt = travelToTarget(getTarget(),
-            CostDeciders.avoidSettlementsAndBlockingUnits(), lb);
+                CostDeciders.avoidSettlementsAndBlockingUnits(), lb);
         switch (mt) {
-        case MOVE: // Arrived
-            if (this.precedingTile != null) {
-                // At a tile next to the settlement, stop pretending that
-                // is where we are going.
-                this.precedingTile = null;
-                return doMission(lb);
-            }
-            break;
+            case MOVE: // Arrived
+                if (this.precedingTile != null) {
+                    // At a tile next to the settlement, stop pretending that
+                    // is where we are going.
+                    this.precedingTile = null;
+                    return doMission(lb);
+                }
+                break;
 
-        case MOVE_HIGH_SEAS: case MOVE_NO_MOVES: case MOVE_ILLEGAL:
-            return lbWait(lb);
+            case MOVE_HIGH_SEAS: case MOVE_NO_MOVES: case MOVE_ILLEGAL:
+                return lbWait(lb);
 
-        case MOVE_NO_REPAIR:
-            return lbFail(lb, false, AIUNITDIED);
+            case MOVE_NO_REPAIR:
+                return lbFail(lb, false, AIUNITDIED);
 
-        case MOVE_NO_ACCESS_EMBARK:
-            setTarget(target);
-            return this;
+            case MOVE_NO_ACCESS_EMBARK:
+                setTarget(target);
+                return this;
 
-        case MOVE_NO_TILE:
-            moveRandomly(tag, null);
-            return lbDodge(lb);
+            case MOVE_NO_TILE:
+                moveRandomly(tag, null);
+                return lbDodge(lb);
 
-        case ATTACK_UNIT:
-            // Could be adjacent to the destination but it is
-            // temporarily blocked by another unit.  Make a random
-            // (directed if possible) move and try again.
-            moveRandomly(tag, unit.getTile()
-                .getDirection(getTarget().getTile()));
-            return lbDodge(lb);
+            case ATTACK_UNIT:
+                // Could be adjacent to the destination but it is
+                // temporarily blocked by another unit.  Make a random
+                // (directed if possible) move and try again.
+                moveRandomly(tag, unit.getTile()
+                        .getDirection(getTarget().getTile()));
+                return lbDodge(lb);
 
-        case ENTER_INDIAN_SETTLEMENT_WITH_SCOUT:
-            d = unit.getTile().getDirection(getTarget().getTile());
-            assert d != null && getTarget() instanceof IndianSettlement;
-            if (AIMessage.askScoutSpeakToChief(aiUnit,
-                                               (IndianSettlement)getTarget())) {
-                lbDone(lb, true, "speak-with-chief at ", getTarget());
-            } else {
-                lbFail(lb, true, "unexpected failure to speak at ", getTarget());
-            }
-            break;
+            case ENTER_INDIAN_SETTLEMENT_WITH_SCOUT:
+                d = unit.getTile().getDirection(getTarget().getTile());
+                assert d != null && getTarget() instanceof IndianSettlement;
+                if (AIMessage.askScoutSpeakToChief(aiUnit,
+                        (IndianSettlement)getTarget())) {
+                    lbDone(lb, true, "speak-with-chief at ", getTarget());
+                } else {
+                    lbFail(lb, true, "unexpected failure to speak at ", getTarget());
+                }
+                break;
 
-        case EXPLORE_LOST_CITY_RUMOUR:
-            d = unit.getTile().getDirection(getTarget().getTile());
-            assert d != null;
-            if (AIMessage.askMove(aiUnit, d)) {
-                lbDone(lb, true, "explore at ", getTarget());
-            } else {
-                lbFail(lb, true, "unexpected failure at ", getTarget());
-            }
-            break;
+            case EXPLORE_LOST_CITY_RUMOUR:
+                d = unit.getTile().getDirection(getTarget().getTile());
+                assert d != null;
+                if (AIMessage.askMove(aiUnit, d)) {
+                    lbDone(lb, true, "explore at ", getTarget());
+                } else {
+                    lbFail(lb, true, "unexpected failure at ", getTarget());
+                }
+                break;
 
-        default:
-            return lbMove(lb, mt);
+            default:
+                return lbMove(lb, mt);
         }
         if (unit.isDisposed()) return this;
 
@@ -504,7 +505,7 @@ public final class ScoutingMission extends Mission {
         Location completed = getTarget();
         Location newTarget = findMissionTarget(aiUnit, 20, false);
         if (newTarget == null
-            || (completed instanceof Colony && newTarget == completed)) {
+                || (completed instanceof Colony && newTarget == completed)) {
             if (completed instanceof Colony && canScoutNatives(aiUnit)) {
                 aiUnit.equipForRole(getSpecification().getDefaultRole());
             }
