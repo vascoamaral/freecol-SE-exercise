@@ -239,8 +239,6 @@
                 type="multiplicative" value="2"/>
     </resource-type>
     <resource-type id="model.resource.treasureChest">
-      <modifier id="model.goods.treasureChest" index="10"
-                type="multiplicative" value="2"/>
     </resource-type>
     <resource-type id="model.resource.cotton">
       <modifier id="model.goods.cotton" index="10"
