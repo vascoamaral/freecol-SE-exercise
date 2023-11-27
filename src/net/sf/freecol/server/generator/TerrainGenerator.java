@@ -695,14 +695,20 @@ public class TerrainGenerator {
             = spec.getTileImprovementType("model.improvement.fishBonusLand");
         TileImprovementType fishBonusRiverType
             = spec.getTileImprovementType("model.improvement.fishBonusRiver");
+        TileImprovementType blessedBonusType
+                = spec.getTileImprovementType("model.improvement.blessed");
         final int bonusNumber
             = mapOptions.getRange(MapGeneratorOptions.BONUS_NUMBER);
         final int treasureChance
                 = mapOptions.getRange(MapGeneratorOptions.TREASURE_NUMBER);
+        final double blessedChance = 0.2;
         if (t.isLand()) {
             if (generateBonus && this.cache.nextInt(100) < bonusNumber) {
                 // Create random Bonus Resource
                 t.addResource(createResource(t));
+            }
+            if (random.nextDouble() < blessedChance) {
+                t.add(new TileImprovement(game, t, blessedBonusType, null));
             }
         } else {
             int adjacentLand = 0;

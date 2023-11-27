@@ -30,6 +30,7 @@ import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.i18n.NameCache;
 import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.LostCityRumour.RumourType;
+import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.networking.FountainOfYouthMessage;

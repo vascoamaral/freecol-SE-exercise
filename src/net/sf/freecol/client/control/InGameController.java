@@ -80,6 +80,7 @@ import net.sf.freecol.common.model.ModelMessage.MessageType;
 import net.sf.freecol.common.model.Monarch.MonarchAction;
 import net.sf.freecol.common.model.NativeTrade.NativeTradeAction;
 import net.sf.freecol.common.model.Player.NoClaimReason;
+import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Unit.UnitState;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.util.Introspector;
