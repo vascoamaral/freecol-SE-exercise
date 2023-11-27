@@ -45,7 +45,32 @@ import javax.swing.JLabel;
 
 import net.sf.freecol.client.gui.images.ImageCreators;
 import net.sf.freecol.common.io.sza.SimpleZippedAnimation;
-import net.sf.freecol.common.model.*;
+import net.sf.freecol.common.model.Ability;
+import net.sf.freecol.common.model.BuildableType;
+import net.sf.freecol.common.model.Building;
+import net.sf.freecol.common.model.BuildingType;
+import net.sf.freecol.common.model.Colony;
+import net.sf.freecol.common.model.Direction;
+import net.sf.freecol.common.model.FoundingFather;
+import net.sf.freecol.common.model.FreeColObject;
+import net.sf.freecol.common.model.GoodsType;
+import net.sf.freecol.common.model.IndianSettlement;
+import net.sf.freecol.common.model.Location;
+import net.sf.freecol.common.model.LostCityRumour;
+import net.sf.freecol.common.model.Nation;
+import net.sf.freecol.common.model.Player;
+import net.sf.freecol.common.model.Resource;
+import net.sf.freecol.common.model.ResourceType;
+import net.sf.freecol.common.model.Role;
+import net.sf.freecol.common.model.RuinedLostCityRumour;
+import net.sf.freecol.common.model.Settlement;
+import net.sf.freecol.common.model.SettlementType;
+import net.sf.freecol.common.model.Tension;
+import net.sf.freecol.common.model.Tile;
+import net.sf.freecol.common.model.TileImprovementStyle;
+import net.sf.freecol.common.model.TileType;
+import net.sf.freecol.common.model.Unit;
+import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.resources.ImageCache;
 import net.sf.freecol.common.resources.ImageResource;
 import net.sf.freecol.common.resources.ResourceManager;
@@ -650,7 +675,7 @@ public final class ImageLibrary {
                 : (derived instanceof LostCityRumour)
                 ? getLCRImage(size)
                 : (derived instanceof RuinedLostCityRumour)
-                ? getLCRImage(size)
+                ? getRLCRImage(size)
                 : (derived instanceof Nation)
                 ? getNationImage((Nation)derived, size)
                 : (derived instanceof ResourceType)

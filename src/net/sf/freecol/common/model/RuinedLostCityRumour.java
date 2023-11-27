@@ -233,14 +233,13 @@ public class RuinedLostCityRumour extends TileItem {
                         2 * percentGood));
             }
                 c.add(new RandomChoice<>(RumourType.GIVE_ARMED_BOAT,
-                        88 * percentGood));
+                        25 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
-                        1 * percentGood));
+                        41 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
-                        1 * percentGood));
+                        32 * percentGood));
 
-            c.add(new RandomChoice<>(RumourType.MOUNDS,
-                    8 * percentGood));
+
         }
 
         if (percentBad > 0) { // The BAD

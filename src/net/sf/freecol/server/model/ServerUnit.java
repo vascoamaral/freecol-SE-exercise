@@ -610,48 +610,6 @@ public class ServerUnit extends Unit implements TurnTaker {
                             "sound", "sound.event.fountainOfYouth");
                 }
                 break;
-
-            case GIVE_ARTILLERY:
-                List<UnitType> bombardUnitTypes
-                        = spec.getUnitTypesWithAbility(Ability.DAMAGED_BOMBARD);
-                unitType = getRandomMember(logger, "Choose artillery",
-                        bombardUnitTypes, random);
-                newUnit = new ServerUnit(game, tile, owner,
-                        unitType);
-                cs.addMessage(owner,
-                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                key, owner, newUnit).addName("%piece%", newUnit.getType()));
-                break;
-            case GIVE_BOAT:
-                ServerEurope playerEurope = (ServerEurope)owner.getEurope();
-                if (playerEurope == null) {
-                    // FoY should now be disabled for non-colonial
-                    // players, but leave this in for now as it is harmless.
-                    cs.addMessage(owner,
-                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                    rumour.getAlternateDescriptionKey("noEurope"),
-                                    owner, this));
-                } else {
-                    Unit u = playerEurope.generateFreeBoat(random);
-                    cs.add(See.only(owner), playerEurope);
-                    cs.addMessage(owner,
-                            new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                    key, owner, u)
-                                    .addName("%boat%", u.getType()));
-
-                }
-                break;
-            case GIVE_WAGON:
-                List<UnitType> carry
-                        = spec.getUnitTypesWithAbility(Ability.ONLY_GOODS);
-                unitType = getRandomMember(logger, "Choose Wagon ",
-                        carry, random);
-                newUnit = new ServerUnit(game, tile, owner,
-                        unitType);
-                cs.addMessage(owner,
-                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                key, owner, newUnit).addName("%wagon%", newUnit.getType()));
-                break;
             case NO_SUCH_RUMOUR: case MOUNDS:
             default:
                 logger.warning("Bogus rumour type: " + rumour);
@@ -681,7 +639,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         // type was explicitly set in debug mode.
 
         // Mounds are a special case that degrade to other cases.
-        boolean mounds = rumour == RuinedLostCityRumour.RumourType.MOUNDS;
+        /*boolean mounds = rumour == RuinedLostCityRumour.RumourType.MOUNDS;
         if (mounds) {
             boolean done = false;
             boolean nothing = false;
@@ -707,21 +665,13 @@ public class ServerUnit extends Unit implements TurnTaker {
                         ; // unacceptable result for mounds
                 }
             }
-        }
+        }*/
 
         logger.info("Unit " + getId() + " is exploring rumour " + rumour);
         boolean result = true;
         String key = rumour.getDescriptionKey();
         switch (rumour) {
-            case BURIAL_GROUND:
-                csNativeBurialGround(cs);
-                break;
-            case EXPEDITION_VANISHES:
-                cs.addMessage(owner,
-                        new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                                key, owner));
-                result = false;
-                break;
+
             case FOUNTAIN_OF_YOUTH:
                 ServerEurope europe = (ServerEurope)owner.getEurope();
                 if (europe == null) {

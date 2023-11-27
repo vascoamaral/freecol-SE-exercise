@@ -22,7 +22,12 @@ package net.sf.freecol.common.networking;
 import javax.xml.stream.XMLStreamException;
 
 import net.sf.freecol.common.io.FreeColXMLReader;
-import net.sf.freecol.common.model.*;
+import net.sf.freecol.common.model.Game;
+import net.sf.freecol.common.model.LostCityRumour;
+import net.sf.freecol.common.model.RuinedLostCityRumour;
+import net.sf.freecol.common.model.Direction;
+import net.sf.freecol.common.model.Tile;
+import net.sf.freecol.common.model.Unit;
 import net.sf.freecol.server.FreeColServer;
 import net.sf.freecol.server.model.ServerPlayer;
 
