@@ -1381,6 +1381,31 @@
       <modifier id="model.goods.fish" index="50"
                 type="additive" value="2"/>
     </tile-improvement-type>
+
+    <tile-improvement-type id="model.improvement.blessed" natural="true"
+                           zIndex="250">
+      <modifier id="model.goods.food" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.grain" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.fish" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.sugar" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.tobacco" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.cotton" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.furs" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.lumber" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.ore" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.silver" index="50"
+                type="multiplicative" value="2"/>
+    </tile-improvement-type>
+
     <tile-improvement-type id="model.improvement.fishBonusRiver" natural="true"
                            zIndex="250">
       <scope method-name="isWater" method-value="true" />
@@ -4887,6 +4912,15 @@
         <rangeValue label="medium" value="2"/>
         <rangeValue label="large" value="3"/>
         <rangeValue label="veryLarge" value="5"/>
+      </rangeOption>
+        <!-- Option for setting the percentage of blessed tiles on the map -->
+      <rangeOption id="model.option.blessedNumber"
+                   defaultValue="1" localizedLabels="true">
+        <rangeValue label="none" value="0"/>
+        <rangeValue label="small" value="1"/>
+        <rangeValue label="medium" value="2"/>
+        <rangeValue label="large" value="3"/>
+        <rangeValue label="veryLarge" value="4"/>
       </rangeOption>
         <!-- Option for setting the percentage of bonus tiles on the map -->
         <rangeOption id="model.option.bonusNumber"

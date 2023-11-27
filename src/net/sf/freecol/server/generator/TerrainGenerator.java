@@ -701,13 +701,14 @@ public class TerrainGenerator {
             = mapOptions.getRange(MapGeneratorOptions.BONUS_NUMBER);
         final int treasureChance
                 = mapOptions.getRange(MapGeneratorOptions.TREASURE_NUMBER);
-        final double blessedChance = 0.2;
+       final int blessedChance
+                = mapOptions.getRange(MapGeneratorOptions.BLESSED_NUMBER);
         if (t.isLand()) {
             if (generateBonus && this.cache.nextInt(100) < bonusNumber) {
                 // Create random Bonus Resource
                 t.addResource(createResource(t));
             }
-            if (random.nextDouble() < blessedChance) {
+            if (random.nextDouble() < blessedChance/10.0) {
                 t.add(new TileImprovement(game, t, blessedBonusType, null));
             }
         } else {
