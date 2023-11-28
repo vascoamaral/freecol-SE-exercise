@@ -130,8 +130,9 @@ public class MapGeneratorOptions {
     public static final String TREASURE_NUMBER
             = "model.option.treasureNumber";
 
+    /** Option for setting the percentage of blessed tiles on the map. */
     public static final String BLESSED_NUMBER
-            = "model.option.treasureNumber";
+            = "model.option.blessedNumber";
 
     /** Option for setting the percentage of bonus tiles on the map. */
     public static final String BONUS_NUMBER 
