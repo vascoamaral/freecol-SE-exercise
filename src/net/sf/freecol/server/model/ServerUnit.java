@@ -962,13 +962,13 @@ public class ServerUnit extends Unit implements TurnTaker {
                             "gold", String.valueOf(owner.getGold()),
                             "score", String.valueOf(owner.getScore()));
                     cs.addMessage(owner, new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR, "model.resource.treasureChest.goldMessage",
-                            owner, new Resource(getGame(), "model.resource.treasureChest").getDisplayObject())
+                            owner, spec.getResourceType("model.resource.treasureChest").getDisplayObject())
                             .addAmount("%gold%", goldFound));
                 }
                 else{
                     this.curseUnit();
                     cs.addMessage(owner, new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR, "model.resource.treasureChest.curseMessage",
-                            owner, new Resource(getGame(), "model.resource.treasureChest").getDisplayObject()));
+                            owner, spec.getResourceType("model.resource.treasureChest").getDisplayObject()));
                 }
                 newTile.removeResource();
             }
