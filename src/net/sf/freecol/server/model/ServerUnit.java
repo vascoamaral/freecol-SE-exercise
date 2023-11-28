@@ -926,7 +926,10 @@ public class ServerUnit extends Unit implements TurnTaker {
                         + " has bogus cost: " + getMoveCost(newTile));
                 setMovesLeft(0);
             }
-            setMovesLeft(getMovesLeft() - getMoveCost(newTile));
+            if(this.isCursed())
+                setMovesLeft(getMovesLeft() - getMoveCost(newTile)*2);
+            else
+                setMovesLeft(getMovesLeft() - getMoveCost(newTile));
         }
 
         // Do the move and explore a rumour if needed.
@@ -949,14 +952,24 @@ public class ServerUnit extends Unit implements TurnTaker {
 
         // Claim treasure
         final Specification spec = newTile.getGame().getSpecification();
-        if(newTile.getResource() != null){
-            if(newTile.getResource().getType().equals(spec.getResourceType("model.resource.treasureChest"))){
-                owner.modifyGold(calculateTreasureGold());
-                cs.addPartial(See.only(owner), owner,
-                        "gold", String.valueOf(owner.getGold()),
-                        "score", String.valueOf(owner.getScore()));
-
-                //TODO adicionar mensagem de gold
+        Resource treasure = newTile.getResource();
+        if(treasure != null){
+            if(treasure.getType().equals(spec.getResourceType("model.resource.treasureChest"))){
+                if(Math.random() < 0.7){
+                    int goldFound = calculateTreasureGold(random);
+                    owner.modifyGold(goldFound);
+                    cs.addPartial(See.only(owner), owner,
+                            "gold", String.valueOf(owner.getGold()),
+                            "score", String.valueOf(owner.getScore()));
+                    cs.addMessage(owner, new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR, "model.resource.treasureChest.goldMessage",
+                            owner, new Resource(getGame(), "model.resource.treasureChest").getDisplayObject())
+                            .addAmount("%gold%", goldFound));
+                }
+                else{
+                    this.curseUnit();
+                    cs.addMessage(owner, new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR, "model.resource.treasureChest.curseMessage",
+                            owner, new Resource(getGame(), "model.resource.treasureChest").getDisplayObject()));
+                }
                 newTile.removeResource();
             }
         }
@@ -1050,8 +1063,9 @@ public class ServerUnit extends Unit implements TurnTaker {
         csCheckDiscoverRegion(newTile, cs);
     }
 
-    private int calculateTreasureGold(){
-        return getGame().getTurn().getNumber()*2; // TODO alterar para um calculo mais razoavel
+    private int calculateTreasureGold(Random random){
+        return (randomInt(logger, "gold", random, 40)+70) *
+                (int)Math.pow(getGame().getTurn().getNumber(), 0.2);
     }
 
     /**
