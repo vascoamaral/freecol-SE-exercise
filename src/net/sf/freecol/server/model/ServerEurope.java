@@ -201,7 +201,6 @@ public class ServerEurope extends Europe implements TurnTaker {
                 ut ->   ut.isNaval() && ut.hasAbility(Ability.CARAVEL),
                 ut -> new RandomChoice<>(ut, 100));
     }
-
     /**
      * Replace any non-recruitable recruits.
      *
@@ -240,14 +239,10 @@ public class ServerEurope extends Europe implements TurnTaker {
     public Unit generateFreeBoat(Random random) {
         final Game game = getGame();
         final Player owner = getOwner();
-        Specification spec = game.getSpecification();
         List<RandomChoice<UnitType>> boats = generatePossibleBoatsList();
         UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
                 boats, random);
-        Unit boat = new ServerUnit(game, this, owner, ut);
-        GoodsType t = spec.getGoodsType("model.goods.horses");
-        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t, 50);
-        return boat;
+        return new ServerUnit(game, this, owner, ut);
     }
 
     public Unit generateFreeArmedBoat(Random random) {

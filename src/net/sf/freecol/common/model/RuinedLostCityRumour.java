@@ -58,17 +58,14 @@ public class RuinedLostCityRumour extends TileItem {
     /** Constants describing types of Lost City Rumours. */
     public static enum RumourType {
         NO_SUCH_RUMOUR,
-        BURIAL_GROUND,
-        EXPEDITION_VANISHES,
         NOTHING,
-        LEARN,
-        TRIBAL_CHIEF,
-        COLONIST,
-        MOUNDS,
-        RUINS,
-        CIBOLA,
         FOUNTAIN_OF_YOUTH,
-        GIVE_ARTILLERY, GIVE_BOAT, GIVE_WAGON,GIVE_DAMAGED_ARTILLERY, GIVE_ARMED_BOAT;
+        MOUNDS,
+        GIVE_ARTILLERY,
+        GIVE_BOAT,
+        GIVE_WAGON,
+        GIVE_DAMAGED_ARTILLERY,
+        GIVE_ARMED_BOAT;
 
 
         /**
@@ -206,10 +203,7 @@ public class RuinedLostCityRumour extends TileItem {
         // difficulty options.  Neutral results take up any remainder.
         int percentBad = spec.getInteger(GameOptions.BAD_RUMOUR);
         int percentGood = spec.getInteger(GameOptions.GOOD_RUMOUR);
-        if (!allowBurial && !allowVanish) {
-            // Degenerate case where no bad rumours are possible
-            percentBad = 0;
-        } else if (unit != null) {
+        if (unit != null) {
             if (unit.getOwner().hasAbility(Ability.RUMOURS_ALWAYS_POSITIVE)) {
                 // DeSoto forces all good results.
                 percentBad = 0;
@@ -244,14 +238,10 @@ public class RuinedLostCityRumour extends TileItem {
 
         if (percentBad > 0) { // The BAD
             List<RandomChoice<RumourType>> cbad = new ArrayList<>();
-            if (allowBurial) {
                 cbad.add(new RandomChoice<>(RumourType.GIVE_DAMAGED_ARTILLERY,
                         50 * percentBad));
-            }
-            if (allowVanish) {
                 cbad.add(new RandomChoice<>(RumourType.GIVE_WAGON,
                         50 * percentBad));
-            }
             RandomChoice.normalize(cbad, 100);
             c.addAll(cbad);
         }

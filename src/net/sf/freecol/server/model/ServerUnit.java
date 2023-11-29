@@ -742,8 +742,6 @@ public class ServerUnit extends Unit implements TurnTaker {
                             new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
                                     key, owner, u)
                                     .addName("%boat%", u.getType()));
-                    cs.addAttribute(See.only(owner),
-                            "sound", "sound.anthem.portuguese");
                 }
                 break;
             case GIVE_ARMED_BOAT:

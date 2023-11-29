@@ -187,15 +187,15 @@ public class SimpleMapGenerator implements MapGenerator {
         //SPLIT SPLIT SPLIT
         final int rumourNumber = game.getMapGeneratorOptions()
                 .getRange(MapGeneratorOptions.RUMOUR_NUMBER);
-        int number = getApproximateLandCount(game) / rumourNumber;
-        int ruinedNumber =  getApproximateLandCount(game) / rumourNumber;
+        int number = getApproximateLandCount(game) / rumourNumber ;
+        int ruinedNumber =  getApproximateLandCount(game) / rumourNumber/6;
         int counter = 0;
         int ruinedCounter =0;
 
         // FIXME: Remove temporary fix:
         if (importMap != null) {
             number = map.getWidth() * map.getHeight() * 25 / (100 * 35);
-            ruinedNumber = map.getWidth() * map.getHeight() * 25 / (100 * 35);
+            ruinedNumber = map.getWidth() * map.getHeight() * 25 / (100 * 35)/6;
         }
 
         for (int i = 0; i < number; i++) {
