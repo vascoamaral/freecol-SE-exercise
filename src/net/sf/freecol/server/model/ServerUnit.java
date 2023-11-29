@@ -39,7 +39,6 @@ import net.sf.freecol.common.networking.NewRegionNameMessage;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.util.LogBuilder;
 import net.sf.freecol.common.util.RandomChoice;
-import net.sf.freecol.server.networking.Server;
 
 import static net.sf.freecol.common.util.CollectionUtils.*;
 import static net.sf.freecol.common.util.RandomUtils.*;
@@ -51,6 +50,8 @@ import static net.sf.freecol.common.util.RandomUtils.*;
 public class ServerUnit extends Unit implements TurnTaker {
 
     private static final Logger logger = Logger.getLogger(ServerUnit.class.getName());
+
+    private double treasureGoldChance = 0.7;
 
 
     /**
@@ -888,6 +889,15 @@ public class ServerUnit extends Unit implements TurnTaker {
     }
 
     /**
+     * set a new chance to get gold from treasure
+     *
+     * @param chance
+     */
+    public void setTreasureGoldChance(double chance){
+        treasureGoldChance = chance;
+    }
+
+    /**
      * Move a unit.
      *
      * @param newTile The {@code Tile} to move to.
@@ -953,7 +963,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         Resource treasure = newTile.getResource();
         if(treasure != null){
             if(treasure.getType().equals(spec.getResourceType("model.resource.treasureChest"))){
-                if(Math.random() < 0.7){
+                if(Math.random() < treasureGoldChance){
                     int goldFound = calculateTreasureGold(random);
                     owner.modifyGold(goldFound);
                     cs.addPartial(See.only(owner), owner,

@@ -2593,11 +2593,18 @@ public class Unit extends GoodsLocation
         return (int)apply(this.type.getMovement(), turn, Modifier.MOVEMENT_BONUS, this.type);
     }
 
+    /**
+     * curses unit
+     */
     public void curseUnit(){
         initialCurseTurn = getGame().getTurn().getNumber();
         isCursed = true;
     }
 
+    /**
+     *
+     * @return the unit is cursed
+     */
     public boolean isCursed(){
         return isCursed;
     }

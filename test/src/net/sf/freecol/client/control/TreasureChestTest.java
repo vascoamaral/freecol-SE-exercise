@@ -15,6 +15,7 @@ public class TreasureChestTest extends FreeColTestCase{
             = spec().getTileType("model.tile.ocean");
     private static final ResourceType treasureChest
             = spec().getResourceType("model.resource.treasureChest");
+
     public void testGetTreasure(){
 
         Game game = ServerTestHelper.startServerGame(getTestMap(ocean));
@@ -33,11 +34,21 @@ public class TreasureChestTest extends FreeColTestCase{
         ServerUnit caravel = new ServerUnit(game, ocean1, dutch, caravelType);
         int inicialGold = dutch.getGold();
 
-
+        caravel.setTreasureGoldChance(1);
         igc.move(dutch, caravel, ocean2);
 
         assertNull(ocean2.getResource());
-        assertTrue(inicialGold < dutch.getGold() || caravel.isCursed());
+        assertTrue(inicialGold < dutch.getGold());
+
+        Tile ocean3 = map.getTile(5, 6);
+        ocean3.setExplored(dutch, true);
+        ocean3.addResource(new Resource(game, ocean3, treasureChest));
+
+        caravel.setTreasureGoldChance(0);
+        igc.move(dutch, caravel, ocean3);
+
+        assertNull(ocean3.getResource());
+        assertTrue(caravel.isCursed());
     }
 
 }

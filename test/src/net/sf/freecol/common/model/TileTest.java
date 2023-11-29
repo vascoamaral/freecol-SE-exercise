@@ -22,6 +22,7 @@ package net.sf.freecol.common.model;
 import static net.sf.freecol.common.util.CollectionUtils.any;
 import static net.sf.freecol.common.util.CollectionUtils.count;
 import static net.sf.freecol.common.util.CollectionUtils.matchKeyEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ public class TileTest extends FreeColTestCase {
         = spec().getTileImprovementType("model.improvement.river");
     private static final TileImprovementType road
         = spec().getTileImprovementType("model.improvement.road");
+    private static final TileImprovementType blessed
+            = spec().getTileImprovementType("model.improvement.blessed");
 
     private static final TileType arctic
         = spec().getTileType("model.tile.arctic");
@@ -830,5 +833,38 @@ public class TileTest extends FreeColTestCase {
         tileN.setType(hills);
         assertEquals("Best landing tile is now hills", tileN,
             settlementTile.getBestDisembarkTile(dutch));
+    }
+
+    public void testBlessedTiles(){
+        Game game = getStandardGame();
+        Map map = getCoastTestMap(plains, true);
+        game.changeMap(map);
+
+
+        Tile tile = map.getTile(5, 8);
+        int iSilver = tile.getPotentialProduction(silver, null);
+        int iFur = tile.getPotentialProduction(furs, null);
+        int iCotton = tile.getPotentialProduction(cotton, null);
+        int iLumber = tile.getPotentialProduction(lumber, null);
+        int iOre = tile.getPotentialProduction(ore, null);
+        int iSugar = tile.getPotentialProduction(sugar, null);
+        int iTobacco = tile.getPotentialProduction(tobacco, null);
+        tile.add(new TileImprovement(game, tile, blessed, null));
+        int fSilver = tile.getPotentialProduction(silver, null);
+        int fFur = tile.getPotentialProduction(furs, null);
+        int fCotton = tile.getPotentialProduction(cotton, null);
+        int fLumber = tile.getPotentialProduction(lumber, null);
+        int fOre = tile.getPotentialProduction(ore, null);
+        int fSugar = tile.getPotentialProduction(sugar, null);
+        int fTobacco = tile.getPotentialProduction(tobacco, null);
+        assertEquals(2*iSilver, fSilver);
+        assertEquals(2*iFur, fFur);
+        assertEquals(2*iCotton, fCotton);
+        assertEquals(2*iLumber, fLumber);
+        assertEquals(2*iOre, fOre);
+        assertEquals(2*iSugar, fSugar);
+        assertEquals(2*iTobacco, fTobacco);
+
+
     }
 }
