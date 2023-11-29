@@ -49,6 +49,16 @@ public class TreasureChestTest extends FreeColTestCase{
 
         assertNull(ocean3.getResource());
         assertTrue(caravel.isCursed());
+
+        Tile ocean4 = map.getTile(5, 6);
+        ocean4.setExplored(dutch, true);
+
+        caravel.setMovesLeft(caravel.getInitialMovesLeft());
+        int initialMovesLeft = caravel.getMovesLeft();
+        igc.move(dutch, caravel, ocean4);
+        int movesLeftAfterCursedMove = caravel.getMovesLeft();
+
+        assertEquals(2, initialMovesLeft/3 - movesLeftAfterCursedMove/3);
     }
 
 }
