@@ -30,6 +30,7 @@ public class AllTests {
         //$JUnit-BEGIN$
         suite.addTestSuite(MoveTest.class);
         suite.addTestSuite(TreasureChestTest.class);
+        suite.addTestSuite(RuinedLostCityTest.class);
         //$JUnit-END$
         return suite;
     }

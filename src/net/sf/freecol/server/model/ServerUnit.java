@@ -890,7 +890,7 @@ public class ServerUnit extends Unit implements TurnTaker {
 
     /**
      * set a new chance to get gold from treasure
-     *
+     * for test purposes only
      * @param chance
      */
     public void setTreasureGoldChance(double chance){

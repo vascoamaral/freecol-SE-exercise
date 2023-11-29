@@ -40,7 +40,6 @@ public class TileTest extends FreeColTestCase {
 
     private static final BuildingType townHallType
         = spec().getBuildingType("model.building.townHall");
-
     private static final GoodsType cotton
         = spec().getGoodsType("model.goods.cotton");
     private static final GoodsType fish
@@ -867,4 +866,5 @@ public class TileTest extends FreeColTestCase {
 
 
     }
+
 }
