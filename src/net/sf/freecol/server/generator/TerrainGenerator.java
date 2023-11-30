@@ -708,7 +708,7 @@ public class TerrainGenerator {
                 // Create random Bonus Resource
                 t.addResource(createResource(t));
             }
-            if (random.nextDouble() < blessedChance/10.0) {
+            if (this.cache.nextInt(100) < blessedChance) {
                 t.add(new TileImprovement(game, t, blessedBonusType, null));
             }
         } else {

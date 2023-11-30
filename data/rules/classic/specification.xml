@@ -1276,9 +1276,28 @@
   <tile-improvement-types>
     <tile-improvement-type id="model.improvement.blessed" natural="true"
                            zIndex="250">
+      <scope type="model.tile.plains" match-negated="true" />
+      <scope type="model.tile.grassland" match-negated="true" />
+      <scope type="model.tile.prairie" match-negated="true" />
+      <scope type="model.tile.savannah" match-negated="true" />
+      <scope type="model.tile.marsh" match-negated="true" />
+      <scope type="model.tile.swamp" match-negated="true" />
+      <scope type="model.tile.desert" match-negated="true" />
+      <scope type="model.tile.tundra" match-negated="true" />
+      <scope type="model.tile.mixedForest" match-negated="true" />
+      <scope type="model.tile.coniferForest" match-negated="true" />
+      <scope type="model.tile.broadleafForest" match-negated="true" />
+      <scope type="model.tile.tropicalForest" match-negated="true" />
+      <scope type="model.tile.wetlandForest" match-negated="true" />
+      <scope type="model.tile.rainForest" match-negated="true" />
+      <scope type="model.tile.scrubForest" match-negated="true" />
+      <scope type="model.tile.borealForest" match-negated="true" />
+      <scope type="model.tile.hills" match-negated="true" />
       <modifier id="model.goods.food" index="50"
                 type="multiplicative" value="2"/>
       <modifier id="model.goods.grain" index="50"
+                type="multiplicative" value="2"/>
+      <modifier id="model.goods.fish" index="50"
                 type="multiplicative" value="2"/>
       <modifier id="model.goods.sugar" index="50"
                 type="multiplicative" value="2"/>
@@ -1399,31 +1418,6 @@
       <modifier id="model.goods.fish" index="50"
                 type="additive" value="2"/>
     </tile-improvement-type>
-
-    <tile-improvement-type id="model.improvement.blessed" natural="true"
-                           zIndex="250">
-      <modifier id="model.goods.food" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.grain" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.fish" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.sugar" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.tobacco" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.cotton" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.furs" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.lumber" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.ore" index="50"
-                type="multiplicative" value="2"/>
-      <modifier id="model.goods.silver" index="50"
-                type="multiplicative" value="2"/>
-    </tile-improvement-type>
-
     <tile-improvement-type id="model.improvement.fishBonusRiver" natural="true"
                            zIndex="250">
       <scope method-name="isWater" method-value="true" />
