@@ -41,7 +41,7 @@ import static net.sf.freecol.common.util.StringUtils.*;
 
 
 /**
- * Represents a lost city rumour.
+ * Represents a ruined lost city rumour.
  */
 public class RuinedLostCityRumour extends TileItem {
 
@@ -55,7 +55,7 @@ public class RuinedLostCityRumour extends TileItem {
     // How many `nothing' rumours are there.
     private static int rumourNothing = -1;
 
-    /** Constants describing types of Lost City Rumours. */
+    /** Constants describing types of Ruined Lost City Rumours. */
     public static enum RumourType {
         NO_SUCH_RUMOUR,
         NOTHING,
@@ -69,7 +69,7 @@ public class RuinedLostCityRumour extends TileItem {
 
 
         /**
-         * Get the stem key for this LCR type.
+         * Get the stem key for this RLCR type.
          *
          * @return The stem key.
          */
@@ -102,7 +102,7 @@ public class RuinedLostCityRumour extends TileItem {
 
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
+     * Creates a new {@code RuinedLostCityRumour} instance.
      *
      * @param game The enclosing {@code Game}.
      * @param tile The {@code Tile} where the LCR is.
@@ -112,7 +112,7 @@ public class RuinedLostCityRumour extends TileItem {
     }
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
+     * Creates a new {@code RuinedLostCityRumour} instance.
      *
      * @param game The enclosing {@code Game}.
      * @param tile The {@code Tile} where the LCR is.
@@ -128,7 +128,7 @@ public class RuinedLostCityRumour extends TileItem {
     }
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
+     * Creates a new {@code RuinedLostCityRumour} instance.
      *
      * @param game The enclosing {@code Game}.
      * @param id The object identifier.
@@ -166,7 +166,7 @@ public class RuinedLostCityRumour extends TileItem {
     }
 
     /**
-     * Chooses a type of Lost City Rumour.  The type of rumour depends
+     * Chooses a type of Ruined Lost City Rumour.  The type of rumour depends
      * on the exploring unit, as well as player settings.
      *
      * The scouting outcome is based on three factors: good/bad percent
@@ -227,11 +227,11 @@ public class RuinedLostCityRumour extends TileItem {
                         2 * percentGood));
             }
                 c.add(new RandomChoice<>(RumourType.GIVE_ARMED_BOAT,
-                        25 * percentGood));
+                        30 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_ARTILLERY,
-                        41 * percentGood));
+                        34 * percentGood));
                 c.add(new RandomChoice<>(RumourType.GIVE_BOAT,
-                        32 * percentGood));
+                        34 * percentGood));
 
 
         }

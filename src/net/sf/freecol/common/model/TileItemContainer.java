@@ -298,6 +298,13 @@ public class TileItemContainer extends FreeColGameObject {
     public final LostCityRumour getLostCityRumour() {
         return (LostCityRumour)findTileItem(ti -> ti instanceof LostCityRumour);
     }
+
+    /**
+     * Gets any ruined lost city rumour in this container.
+     *
+     * @return A {@code RuinedLostCityRumour} item if any, or null if
+     *     not found.
+     */
     public final RuinedLostCityRumour getRuinedLostCityRumour() {
         return (RuinedLostCityRumour)findTileItem(ti -> ti instanceof RuinedLostCityRumour);
     }

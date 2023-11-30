@@ -403,7 +403,6 @@ public class ServerUnit extends Unit implements TurnTaker {
      * @param cs A {@code ChangeSet} to add changes to.
      * @return True if the unit survives.
      */
-    //SPLIT SPLIT SPLIT
     private boolean csExploreLostCityRumour(Random random, ChangeSet cs) {
         final Player owner = getOwner();
         Tile tile = getTile();
@@ -620,6 +619,14 @@ public class ServerUnit extends Unit implements TurnTaker {
         tile.removeLostCityRumour();//-til
         return result;
     }
+
+    /**
+     * Explore a ruined lost city.
+     *
+     * @param random A pseudo-random number source.
+     * @param cs A {@code ChangeSet} to add changes to.
+     * @return True if the unit survives.
+     */
     private boolean csExploreRuinedLostCityRumour(Random random, ChangeSet cs) {
         final Player owner = getOwner();
         Tile tile = getTile();
@@ -636,37 +643,6 @@ public class ServerUnit extends Unit implements TurnTaker {
         if (rumour == null) {
             rumour = lostCity.chooseType(this, random);
         }
-        // Filter out failing cases that could only occur if the
-        // type was explicitly set in debug mode.
-
-        // Mounds are a special case that degrade to other cases.
-        /*boolean mounds = rumour == RuinedLostCityRumour.RumourType.MOUNDS;
-        if (mounds) {
-            boolean done = false;
-            boolean nothing = false;
-            while (!done) {
-                rumour = lostCity.chooseType(this, random);
-                switch (rumour) {
-                    case NOTHING: // Do not accept nothing-result the first time.
-                        if (nothing) {
-                            done = true;
-                        } else {
-                            nothing = true;
-                        }
-                        break;
-                    case EXPEDITION_VANISHES: case TRIBAL_CHIEF:
-                        done = true;
-                        break;
-                    // Fall through
-                    case BURIAL_GROUND:
-                        done = tile.getOwner() != null
-                                && tile.getOwner().isIndian();
-                        break;
-                    default:
-                        ; // unacceptable result for mounds
-                }
-            }
-        }*/
 
         logger.info("Unit " + getId() + " is exploring rumour " + rumour);
         boolean result = true;

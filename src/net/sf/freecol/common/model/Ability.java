@@ -155,6 +155,7 @@ public final class Ability extends Feature {
     public static final String CAN_RECRUIT_UNIT
             = "model.ability.canRecruitUnit";
 
+    /** The ability to identify if a type of boat is a caravel*/
     public static final String CARAVEL
             = "model.ability.caravel";
 

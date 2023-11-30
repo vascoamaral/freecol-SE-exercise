@@ -168,7 +168,7 @@ public class SimpleMapGenerator implements MapGenerator {
     }
 
     /**
-     * Make lost city rumours on the given map.
+     * Make lost city rumours and ruined lost city rumors on the given map.
      *
      * The number of rumours depends on the map size.
      *
@@ -184,20 +184,23 @@ public class SimpleMapGenerator implements MapGenerator {
             // Rumours were read from the import game, no need to do more
             return;
         }
-        //SPLIT SPLIT SPLIT
+
+        //Number: Number of lost city rumours
+        //Ruined Number: Number of ruined lost city treasures
         final int rumourNumber = game.getMapGeneratorOptions()
                 .getRange(MapGeneratorOptions.RUMOUR_NUMBER);
         int number = getApproximateLandCount(game) / rumourNumber ;
-        int ruinedNumber =  getApproximateLandCount(game) / rumourNumber/6;
+        int ruinedNumber =  getApproximateLandCount(game) / rumourNumber/4;
         int counter = 0;
         int ruinedCounter =0;
 
         // FIXME: Remove temporary fix:
         if (importMap != null) {
             number = map.getWidth() * map.getHeight() * 25 / (100 * 35);
-            ruinedNumber = map.getWidth() * map.getHeight() * 25 / (100 * 35)/6;
+            ruinedNumber = map.getWidth() * map.getHeight() * 25 / (100 * 35)/4;
         }
 
+        //Generating lost city rumours
         for (int i = 0; i < number; i++) {
             for (int tries = 0; tries < 100; tries++) {
                 Tile t = map.getRandomLandTile(random);
@@ -216,6 +219,8 @@ public class SimpleMapGenerator implements MapGenerator {
                 }
             }
         }
+
+        //Generating ruined lost city rumours
         for (int i = 0; i < ruinedNumber; i++) {
             for (int tries = 0; tries < 100; tries++) {
                 Tile t = map.getRandomLandTile(random);

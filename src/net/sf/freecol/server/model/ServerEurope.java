@@ -190,12 +190,23 @@ public class ServerEurope extends Europe implements TurnTaker {
                         && ut.isAvailableTo(owner),
                 ut -> new RandomChoice<>(ut, ut.getRecruitProbability()));
     }
+
+    /**
+     * Generate a weighted list of boats that can be attribuited to the player.
+     *
+     * @return A weighted list of boats.
+     */
     private List<RandomChoice<UnitType>> generatePossibleBoatsList() {
         return transform(getSpecification().getUnitTypeList(),
-                ut ->   ut.isNaval(),
+                ut ->   ut.isNaval() && !ut.hasAbility(Ability.UNDEAD),
                 ut -> new RandomChoice<>(ut, 100));
     }
 
+    /**
+     * Generates a caravel type of ship.
+     *
+     * @return A caravel.
+     */
     private List<RandomChoice<UnitType>> generatePossibleBoatsCaravel() {
         return transform(getSpecification().getUnitTypeList(),
                 ut ->   ut.isNaval() && ut.hasAbility(Ability.CARAVEL),

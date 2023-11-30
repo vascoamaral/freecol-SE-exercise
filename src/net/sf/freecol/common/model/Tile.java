@@ -751,6 +751,13 @@ public final class Tile extends UnitLocation implements Named, Ownable {
         return tileItemContainer != null
                 && tileItemContainer.getLostCityRumour() != null;
     }
+
+    /**
+     * Does this tile have a RLCR?
+     *
+     * @return True if this {@code Tile} has a
+     *     {@code LostCityRumour} on it.
+     */
     public boolean hasRuinedLostCityRumour() {
         return tileItemContainer != null
                 && tileItemContainer.getRuinedLostCityRumour() != null;
@@ -767,7 +774,7 @@ public final class Tile extends UnitLocation implements Named, Ownable {
                 : tileItemContainer.getLostCityRumour();
     }
     /**
-     * Gets a lost city rumour on this tile.
+     * Gets a ruined lost city rumour on this tile.
      *
      * @return The {@code LostCityRumour} on this
      *     {@code Tile}, or null if none found.
@@ -877,6 +884,14 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     public void addLostCityRumour(LostCityRumour rumour) {
         addTileItem(rumour);
     }
+
+    /**
+     * Adds a ruined lost city rumour to this tile.
+     *
+     * -til: Changes appearance.
+     *
+     * @param rumour The {@code LostCityRumour} to add.
+     */
     public void addRuinedLostCityRumour(RuinedLostCityRumour rumour) {
         addTileItem(rumour);
     }
@@ -892,6 +907,15 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     public LostCityRumour removeLostCityRumour() {
         return removeTileItem(getLostCityRumour());
     }
+
+    /**
+     * Removes the ruined lost city rumour from this {@code Tile} if there
+     * is one.
+     *
+     * -til: Changes appearance.
+     *
+     * @return The removed {@code LostCityRumour}.
+     */
     public RuinedLostCityRumour removeRuinedLostCityRumour() {
         return removeTileItem(getRuinedLostCityRumour());
     }
