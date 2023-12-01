@@ -1,3 +1,2 @@
 review do use case diagram team member 62333
-Acho que o use case diagrama está incorreto, os atores não me parecem estar bem definidos tal como as suas 
-interações com o sistema
+Concordo com o use case criado, acho que agora já se encontra estruturalmente correto e de acordo com o código do FreeCol
