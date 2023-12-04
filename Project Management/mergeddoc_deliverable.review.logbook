@@ -1,0 +1,8 @@
+Review de Tomás Mendes (63350) ao mergedoc file:
+
++ Ficheiro organizado (com indice e identificação dos autores de cada elemento no documento).
++ Para além dos comentarios já feitos em outros reviews de conceitos neste mergedoc file, refiro que os use case diagrams de cada user story
+  representam bem a forma como o programa e o utilizador interagem nos eventos presentes de cada user story.
++ Alem de concordar com o facto de o nosso codigo ser eficiente e extensivel, creio que era possivel acrescentar que
+  nunca tivemos de modificar as nossas ideias iniciais dos nossos user stories pois, pelo contrario, expandimo-nos nas nossas
+  implementações com mais funcionalidades.

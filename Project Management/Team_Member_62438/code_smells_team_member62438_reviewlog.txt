@@ -1,0 +1,5 @@
+ReviewLog dos code smells do team member 62756
+1 - verifico o primeiro code smell
+2 - visto que o valor boolean retornado não é usado para nada concordo que a função deveria ser
+trocada por uma função void facilitando o código não tendo de lidar com os valores de return da função
+3 - concordo que sejam linhas de código duplicadas que poderiam ser facilmente agrupadas

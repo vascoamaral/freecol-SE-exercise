@@ -1,0 +1,2 @@
+review do use case diagram team member 62333
+Concordo com o use case criado, acho que agora já se encontra estruturalmente correto e de acordo com o código do FreeCol

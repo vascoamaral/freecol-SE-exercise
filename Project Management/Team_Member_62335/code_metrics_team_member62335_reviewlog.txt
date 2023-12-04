@@ -1,0 +1,5 @@
+Review a Code Metrics de 62756
+
+
+
+As metrics estão bem explicadas, qualquer um entenderia o porquê da complexidade ser um problema e de que forma isso afeta a facilidade do entendimento por de trás de um programa grande.

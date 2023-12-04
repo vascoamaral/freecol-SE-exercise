@@ -1,0 +1,10 @@
+Review a Code Smells de 63347
+
+
+1- concordo
+
+2- concordo
+
+3- concordo
+
+Verifico que em todos os code smells apresentados são de facto code smells e estão bem descritos.

@@ -25,16 +25,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import net.sf.freecol.common.FreeColException;
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractGoods;
-import net.sf.freecol.common.model.AbstractUnit;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitType;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.option.GameOptions;
@@ -51,7 +42,6 @@ import static net.sf.freecol.common.util.RandomUtils.*;
 public class ServerEurope extends Europe implements TurnTaker {
 
     private static final Logger logger = Logger.getLogger(ServerEurope.class.getName());
-
 
     /**
      * Trivial constructor for Game.newInstance.
@@ -104,7 +94,7 @@ public class ServerEurope extends Europe implements TurnTaker {
         // Buy what is needed
         for (AbstractGoods ag : transform(req, AbstractGoods::isPositive)) {
             int m = ((ServerPlayer)owner).buyInEurope(null, null,
-                ag.getType(), ag.getAmount());
+                    ag.getType(), ag.getAmount());
             if (m > 0) {
                 ((ServerPlayer)owner).addExtraTrade(new AbstractGoods(ag.getType(), -m));
             }
@@ -138,7 +128,7 @@ public class ServerEurope extends Europe implements TurnTaker {
         UnitType unitType;
         do {
             unitType = RandomChoice.getWeightedRandom(logger, "Recruits",
-                                                      recruits, random);
+                    recruits, random);
         } while (addRecruitable(unitType, false));
     }
 
@@ -167,8 +157,8 @@ public class ServerEurope extends Europe implements TurnTaker {
         // recruit type.
         final int count = MigrationType.getMigrantCount();
         int index = (MigrationType.specificMigrantSlot(slot))
-            ? MigrationType.migrantSlotToIndex(slot)
-            : randomInt(logger, "Choose emigrant", random, count);
+                ? MigrationType.migrantSlotToIndex(slot)
+                : randomInt(logger, "Choose emigrant", random, count);
         List<AbstractUnit> expanded = getExpandedRecruitables(true);
         AbstractUnit result = expanded.remove(index);
         this.recruitables.clear();
@@ -176,7 +166,7 @@ public class ServerEurope extends Europe implements TurnTaker {
         this.recruitables.add(top);
         for (AbstractUnit au : expanded) {
             if (au.getId().equals(top.getId())
-                && au.getRoleId().equals(top.getRoleId())) {
+                    && au.getRoleId().equals(top.getRoleId())) {
                 top.addToNumber(au.getNumber());
             } else {
                 this.recruitables.add(au);
@@ -195,12 +185,33 @@ public class ServerEurope extends Europe implements TurnTaker {
     private List<RandomChoice<UnitType>> generateRecruitablesList() {
         final Player owner = getOwner();
         return transform(getSpecification().getUnitTypeList(),
-                         ut -> ut.isRecruitable()
-                             && owner.hasAbility(Ability.CAN_RECRUIT_UNIT, ut)
-                             && ut.isAvailableTo(owner),
-                         ut -> new RandomChoice<>(ut, ut.getRecruitProbability()));
+                ut -> ut.isRecruitable()
+                        && owner.hasAbility(Ability.CAN_RECRUIT_UNIT, ut)
+                        && ut.isAvailableTo(owner),
+                ut -> new RandomChoice<>(ut, ut.getRecruitProbability()));
     }
 
+    /**
+     * Generate a weighted list of boats that can be attribuited to the player.
+     *
+     * @return A weighted list of boats.
+     */
+    private List<RandomChoice<UnitType>> generatePossibleBoatsList() {
+        return transform(getSpecification().getUnitTypeList(),
+                ut ->   ut.isNaval() && !ut.hasAbility(Ability.UNDEAD),
+                ut -> new RandomChoice<>(ut, 100));
+    }
+
+    /**
+     * Generates a caravel type of ship.
+     *
+     * @return A caravel.
+     */
+    private List<RandomChoice<UnitType>> generatePossibleBoatsCaravel() {
+        return transform(getSpecification().getUnitTypeList(),
+                ut ->   ut.isNaval() && ut.hasAbility(Ability.CARAVEL),
+                ut -> new RandomChoice<>(ut, 100));
+    }
     /**
      * Replace any non-recruitable recruits.
      *
@@ -210,7 +221,7 @@ public class ServerEurope extends Europe implements TurnTaker {
     public boolean replaceRecruits(Random random) {
         final Specification spec = getSpecification();
         boolean result = removeInPlace(recruitables,
-            au -> !hasAbility(Ability.CAN_RECRUIT_UNIT, au.getType(spec)));
+                au -> !hasAbility(Ability.CAN_RECRUIT_UNIT, au.getType(spec)));
         fillRecruitables(random);
         return result;
     }
@@ -231,11 +242,36 @@ public class ServerEurope extends Europe implements TurnTaker {
         List<RandomChoice<UnitType>> recruits = generateRecruitablesList();
         for (int k = 0; k < n; k++) {
             UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
-                                                         recruits, random);
+                    recruits, random);
             ret.add(new ServerUnit(game, this, owner, ut));//-vis: safe, Europe
         }
         return ret;
     }
+    public Unit generateFreeBoat(Random random) {
+        final Game game = getGame();
+        final Player owner = getOwner();
+        List<RandomChoice<UnitType>> boats = generatePossibleBoatsList();
+        UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
+                boats, random);
+        return new ServerUnit(game, this, owner, ut);
+    }
+
+    public Unit generateFreeArmedBoat(Random random) {
+        final Game game = getGame();
+        final Player owner = getOwner();
+        Specification spec = game.getSpecification();
+        List<RandomChoice<UnitType>> boats = generatePossibleBoatsCaravel();
+        UnitType ut = RandomChoice.getWeightedRandom(logger, "Choose FoY",
+                boats, random);
+        Unit boat = new ServerUnit(game, this, owner, ut);
+        GoodsType t1 = spec.getGoodsType("model.goods.horses");
+        GoodsType t2 = spec.getGoodsType("model.goods.muskets");
+        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t1, 100);
+        ((ServerPlayer) owner).stealInEurope(random,boat.getGoodsContainer(),t2, 100);
+        return boat;
+    }
+
+
 
     /**
      * Increases the price for a unit.
@@ -247,10 +283,10 @@ public class ServerEurope extends Europe implements TurnTaker {
         final Specification spec = getSpecification();
         String baseOption = GameOptions.PRICE_INCREASE_PER_TYPE;
         String option = (spec.getBoolean(baseOption))
-            ? "model.option.priceIncrease." + unitType.getSuffix()
-            : "model.option.priceIncrease";
+                ? "model.option.priceIncrease." + unitType.getSuffix()
+                : "model.option.priceIncrease";
         int increase = (spec.hasOption(option, IntegerOption.class))
-            ? spec.getInteger(option) : 0;
+                ? spec.getInteger(option) : 0;
         if (increase != 0) {
             unitPrices.put(unitType, price + increase);
         }
@@ -273,7 +309,7 @@ public class ServerEurope extends Europe implements TurnTaker {
         if (ret) {
             Player owner = getOwner();
             cs.addPartial(See.only(owner), owner,
-                "gold", String.valueOf(owner.getGold()));
+                    "gold", String.valueOf(owner.getGold()));
             cs.add(See.only(owner), unit);
             ((ServerPlayer)owner).flushExtraTrades(random);
             ((ServerPlayer)owner).csFlushMarket(cs);
@@ -298,7 +334,7 @@ public class ServerEurope extends Europe implements TurnTaker {
         lb.add(this);
 
         for (Unit unit : transform(getUnits(),
-                                   u -> u.isNaval() && u.isDamaged())) {
+                u -> u.isNaval() && u.isDamaged())) {
             ((ServerUnit)unit).csRepairUnit(cs);
         }
     }

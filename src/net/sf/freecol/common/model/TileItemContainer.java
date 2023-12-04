@@ -236,8 +236,8 @@ public class TileItemContainer extends FreeColGameObject {
     public TileImprovement getImprovement(TileImprovementType type) {
         synchronized (tileItems) {
             return (TileImprovement)find(tileItems,
-                ti -> (ti instanceof TileImprovement
-                    && ((TileImprovement)ti).getType() == type));
+                    ti -> (ti instanceof TileImprovement
+                            && ((TileImprovement)ti).getType() == type));
         }
     }
 
@@ -251,9 +251,9 @@ public class TileItemContainer extends FreeColGameObject {
     private List<TileImprovement> getImprovements(boolean completedOnly) {
         synchronized (tileItems) {
             return transform(tileItems,
-                             ti -> ti instanceof TileImprovement
-                                && (!completedOnly || ((TileImprovement)ti).isComplete()),
-                             ti -> (TileImprovement)ti);
+                    ti -> ti instanceof TileImprovement
+                            && (!completedOnly || ((TileImprovement)ti).isComplete()),
+                    ti -> (TileImprovement)ti);
         }
     }
 
@@ -300,6 +300,16 @@ public class TileItemContainer extends FreeColGameObject {
     }
 
     /**
+     * Gets any ruined lost city rumour in this container.
+     *
+     * @return A {@code RuinedLostCityRumour} item if any, or null if
+     *     not found.
+     */
+    public final RuinedLostCityRumour getRuinedLostCityRumour() {
+        return (RuinedLostCityRumour)findTileItem(ti -> ti instanceof RuinedLostCityRumour);
+    }
+
+    /**
      * Gets any resource item.
      *
      * @return A {@code Resource} item, or null is none found.
@@ -316,7 +326,7 @@ public class TileItemContainer extends FreeColGameObject {
      */
     public TileImprovement getRoad() {
         return (TileImprovement)findTileItem(ti ->
-            ti instanceof TileImprovement && ((TileImprovement)ti).isRoad());
+                ti instanceof TileImprovement && ((TileImprovement)ti).isRoad());
     }
 
     /**
@@ -327,7 +337,7 @@ public class TileItemContainer extends FreeColGameObject {
      */
     public TileImprovement getRiver() {
         return (TileImprovement)findTileItem(ti ->
-            ti instanceof TileImprovement && ((TileImprovement)ti).isRiver());
+                ti instanceof TileImprovement && ((TileImprovement)ti).isRiver());
     }
 
     /**
@@ -354,11 +364,11 @@ public class TileItemContainer extends FreeColGameObject {
         synchronized (tileItems) {
             TileImprovement river = getRiver();
             if(river != null && !river.isTileTypeAllowed(tileType)
-                && !tileType.isWater()) {
+                    && !tileType.isWater()) {
                 river.updateRiverConnections(null);
             }
             removed = removeInPlace(tileItems,
-                                    ti -> !ti.isTileTypeAllowed(tileType));
+                    ti -> !ti.isTileTypeAllowed(tileType));
         }
         if (removed) invalidateCache();
     }
@@ -384,7 +394,7 @@ public class TileItemContainer extends FreeColGameObject {
                                       int potential, boolean onlyNatural) {
         int result = potential;
         for (TileItem item : transform(getTileItems(),
-                                       ti -> !onlyNatural || ti.isNatural())) {
+                ti -> !onlyNatural || ti.isNatural())) {
             result = item.applyBonus(goodsType, unitType, result);
         }
         return result;
@@ -401,7 +411,7 @@ public class TileItemContainer extends FreeColGameObject {
                                                    UnitType unitType) {
         synchronized (tileItems) {
             return flatten(tileItems,
-                ti -> ti.getProductionModifiers(goodsType, unitType));
+                    ti -> ti.getProductionModifiers(goodsType, unitType));
         }
     }
 
@@ -433,11 +443,11 @@ public class TileItemContainer extends FreeColGameObject {
         int moveCost = basicMoveCost;
         for (TileItem item : transform(getTileItems(), ti ->
                 (ti instanceof TileImprovement
-                    && ((TileImprovement)ti).isComplete()))) {
+                        && ((TileImprovement)ti).isComplete()))) {
             Direction direction = targetTile.getDirection(fromTile);
             if (direction == null) return INFINITY;
             moveCost = Math.min(moveCost,
-                ((TileImprovement)item).getMoveCost(direction, moveCost));
+                    ((TileImprovement)item).getMoveCost(direction, moveCost));
         }
         return moveCost;
     }
@@ -458,24 +468,29 @@ public class TileItemContainer extends FreeColGameObject {
         List<TileItem> otherItems = tic.getTileItems();
         List<TileItem> result = new ArrayList<TileItem>();
         for (TileItem item : transform(otherItems, ti ->
-                                       layer.compareTo(ti.getLayer()) >= 0)) {
+                layer.compareTo(ti.getLayer()) >= 0)) {
             if (item instanceof Resource) {
                 Resource resource = (Resource)item;
                 ResourceType type
-                    = spec.getResourceType(resource.getType().getId());
+                        = spec.getResourceType(resource.getType().getId());
                 result.add(new Resource(game, tile, type, resource.getQuantity()));
             } else if (item instanceof LostCityRumour) {
                 LostCityRumour rumour = (LostCityRumour)item;
                 result.add(new LostCityRumour(game, tile,
                         rumour.getType(), rumour.getName()));
-            } else if (item instanceof TileImprovement) {
+            } else if (item instanceof RuinedLostCityRumour) {
+                RuinedLostCityRumour rumour = (RuinedLostCityRumour)item;
+                result.add(new RuinedLostCityRumour(game, tile,
+                        rumour.getType(), rumour.getName()));
+            }
+            else if (item instanceof TileImprovement) {
                 TileImprovement improvement = (TileImprovement)item;
                 if (layer.compareTo(Map.Layer.ALL) >= 0
-                    || improvement.getType().isNatural()) {
+                        || improvement.getType().isNatural()) {
                     TileImprovementType type
-                        = spec.getTileImprovementType(improvement.getType().getId());
+                            = spec.getTileImprovementType(improvement.getType().getId());
                     final TileImprovement tileImprovement = new TileImprovement(game, tile, type,
-                                                   improvement.getStyle());
+                            improvement.getStyle());
                     tileImprovement.setMagnitude(improvement.getMagnitude());
                     result.add(tileImprovement);
                 }
@@ -534,22 +549,22 @@ public class TileItemContainer extends FreeColGameObject {
                             lb.add("\n  TileImprovement null river style: ", tim);
                             integ = integ.fail();
                         } else
-                        // end @compat
+                            // end @compat
 
-                        // The map editor can not ensure these are not
-                        // put into the map, else it would be impossible
-                        // to add any rivers, unless code for map saving
-                        // would be changed to filter these out.
-                        if ("0000".equals(tim.getStyle().toString())) {
-                            lb.add("\n  TileImprovement 0000 river: ", tim);
-                            integ = integ.fail();
-                        }
+                            // The map editor can not ensure these are not
+                            // put into the map, else it would be impossible
+                            // to add any rivers, unless code for map saving
+                            // would be changed to filter these out.
+                            if ("0000".equals(tim.getStyle().toString())) {
+                                lb.add("\n  TileImprovement 0000 river: ", tim);
+                                integ = integ.fail();
+                            }
                     }
                 }
 
                 if (!integ.safe()) {
                     logger.warning("Removing broken TileImprovement: "
-                        + ti.getId());
+                            + ti.getId());
                     removeTileItem(ti);
                     integ = integ.fix();
                 }
@@ -623,7 +638,7 @@ public class TileItemContainer extends FreeColGameObject {
         super.readAttributes(xr);
 
         tile = xr.findFreeColGameObject(getGame(), TILE_TAG,
-                                        Tile.class, (Tile)null, true);
+                Tile.class, (Tile)null, true);
     }
 
     /**
@@ -649,14 +664,19 @@ public class TileItemContainer extends FreeColGameObject {
             LostCityRumour lcr = xr.readFreeColObject(game, LostCityRumour.class);
             if (lcr != null) addTileItem(lcr);
 
-        } else if (Resource.TAG.equals(tag)) {
+        } else if (RuinedLostCityRumour.TAG.equals(tag)) {
+            RuinedLostCityRumour lcr = xr.readFreeColObject(game, RuinedLostCityRumour.class);
+            if (lcr != null) addTileItem(lcr);
+
+        }
+        else if (Resource.TAG.equals(tag)) {
             addTileItem(xr.readFreeColObject(game, Resource.class));
 
         } else if (TileImprovement.TAG.equals(tag)
-                   // @compat 0.11.3
-                   || OLD_TILE_IMPROVEMENT_TAG.equals(tag)
-                   // end @compat 0.11.3
-                   ) {
+                // @compat 0.11.3
+                || OLD_TILE_IMPROVEMENT_TAG.equals(tag)
+            // end @compat 0.11.3
+        ) {
             addTileItem(xr.readFreeColObject(game, TileImprovement.class));
 
         } else {

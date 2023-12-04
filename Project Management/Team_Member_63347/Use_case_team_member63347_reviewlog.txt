@@ -1,0 +1,3 @@
+Review log do use case diagram do team member 62756
+Concordo com as relações apresentadas de player, embora apenas pela imagem não saber de qual sistema de classes estamos a tratar, assumo que seja sobre as ações de um turno do jogador
+Também concordo com as relações de um developer neste sistema

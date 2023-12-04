@@ -1,0 +1,6 @@
+Review dos code metrics de 62333
+
+  - Analise geral da "Lines of Code" metric
+  Concordo com as afirmações prestadas pelo meu colega, pois acredito também que, com um numero de linhas de codiog excessivo,
+o proprio codigo fica excessivo e relativamente dificil de ler e compreender (tal como refere, este detalhe leva a certos Code Smells
+como o Long Method), sendo que não tenho muito mais a acrescentar

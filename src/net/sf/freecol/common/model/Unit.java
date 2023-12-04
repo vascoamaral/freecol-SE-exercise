@@ -73,6 +73,10 @@ public class Unit extends GoodsLocation
 
     private static final Logger logger = Logger.getLogger(Unit.class.getName());
 
+    private boolean isCursed = false;
+
+    private int initialCurseTurn = 0;
+
     private static class ClosestSettlementGoalDecider implements GoalDecider {
 
         /** A tile to exclude. */
@@ -2584,7 +2588,25 @@ public class Unit extends GoodsLocation
     @Override
     public int getInitialMovesLeft() {
         Turn turn = getGame().getTurn();
+        if(turn.getNumber() - initialCurseTurn == 5)
+            isCursed = false;
         return (int)apply(this.type.getMovement(), turn, Modifier.MOVEMENT_BONUS, this.type);
+    }
+
+    /**
+     * curses unit
+     */
+    public void curseUnit(){
+        initialCurseTurn = getGame().getTurn().getNumber();
+        isCursed = true;
+    }
+
+    /**
+     *
+     * @return the unit is cursed
+     */
+    public boolean isCursed(){
+        return isCursed;
     }
 
     /**
@@ -4155,7 +4177,6 @@ public class Unit extends GoodsLocation
     public Location getLocation() {
         return this.location;
     }
-
     /**
      * Sets the location of this unit.
      *

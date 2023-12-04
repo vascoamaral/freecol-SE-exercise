@@ -29,6 +29,8 @@ public class AllTests {
         TestSuite suite = new TestSuite("Test for net.sf.freecol.client.control");
         //$JUnit-BEGIN$
         suite.addTestSuite(MoveTest.class);
+        suite.addTestSuite(TreasureChestTest.class);
+        suite.addTestSuite(RuinedLostCityTest.class);
         //$JUnit-END$
         return suite;
     }

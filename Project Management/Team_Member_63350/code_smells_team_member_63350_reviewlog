@@ -1,0 +1,12 @@
+Review dos Code Smells de 62335
+
+- Large Class, InGameController
+Concordo na classificação da classe "InGameController" como uma Large Class, considerando o numero de linhas que esta ocupa.
+A solução de separar os diversos metodos da classe em classes menores parece-me também a solução mais eficiente para este problema
+
+- Feature Envy, updateGUI()
+Concordo na atruibuição de "Feature Envy" ao metodo updateGUI(), pois confirmo a dependencia excessiva da chamada de objetos GUI
+
+- Feature Envy, nationSumary()
+Também concordo com a designação de "Feature Envy" ao metodo nationSummary(), pela dependencia aos objetos referidos
+As sugestões que o meu colega sugere parecem-me também suloções relativamente simples de implementar e efetivas

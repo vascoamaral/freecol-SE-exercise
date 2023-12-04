@@ -1,0 +1,6 @@
+Review dos Design Patterns team_member_62335
+1 - verifico que está correto
+2 - Concordo porém arrisco dizer que existe 2 templates, 1 com a classe abstrata TimedSession
+e as classes que a estendem, e outro template que é o apresentado sendo todas as classes apresentadas
+na print fornecida
+3 - Verifico que está correto

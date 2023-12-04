@@ -172,7 +172,7 @@ public class ClassicTileProductionTest extends FreeColTestCase {
             final String key = expectedEntry.getKey();
             final Integer actualProduction = actual.get(key);
             if (actualProduction == null) {
-                fail("Missing actual production for: " + key);
+                fail("Missing actual production for: " + key );
             }
             if (expectedEntry.getValue() != actualProduction) {
                 failedChecks++;

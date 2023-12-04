@@ -1,0 +1,14 @@
+Patterns (Tomás Mendes - 63350)
+
+Factory Method - ActionManager
+
+A classe parece fazer parte de um factory pattern, a classe cria varias instancias de ações diferentes.
+
+Decorator Pattern - ColopediaGameObjectTypePanel
+
+Ao ir ver as classes envolvidas pareceu-me que se trata de um decorator pattern, e pelo diagrama mostardo também faz entender que se 
+trata de um decorator pattern.
+
+Template Pattern - AbstractMission
+
+A classe abstrata e as suas subclasses indicam que se trata de um template pattern.

@@ -1,0 +1,11 @@
+Review de Pattern Diagrams de 63347
+
+- Template Pattern, ReportUnitPanel
+Pelo conjunto demonstrado ser um exemplo de classe abstrata com as suas subclasses, concordo com o facto de ser considerado "Template Diagram"
+
+- Command Pattern, unload()
+Concordo com o facto do metodo unload ser considerado um "Command Pattern", apesar de achar que a justificação do meu colega poder ter sido um pouco mais completa
+
+- Decorator Pattern, OptionUI()
+Concordo com o meu colega pois acredito também que a classe, por conter as caracteristicas necessarias para ser o tal padrão 
+(É abstrata, ligada a interface e a subclasses e contem classes ligadas também á interface), seja um Decorator

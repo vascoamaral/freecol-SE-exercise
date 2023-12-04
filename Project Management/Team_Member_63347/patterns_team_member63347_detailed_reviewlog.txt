@@ -1,0 +1,3 @@
+Reviewlog dos design pattern feitos pelo team member 62333
+Concordo com o observer pattern, já que quando os observers são notificados de alteracões.
+Os templates parecem corretos, existe uma classe abstrata e várias subclasses do mesmo tipo que implementam os mesmos métodos.

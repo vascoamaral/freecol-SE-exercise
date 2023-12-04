@@ -695,12 +695,21 @@ public class TerrainGenerator {
             = spec.getTileImprovementType("model.improvement.fishBonusLand");
         TileImprovementType fishBonusRiverType
             = spec.getTileImprovementType("model.improvement.fishBonusRiver");
+        TileImprovementType blessedBonusType
+                = spec.getTileImprovementType("model.improvement.blessed");
         final int bonusNumber
             = mapOptions.getRange(MapGeneratorOptions.BONUS_NUMBER);
+        final int treasureChance
+                = mapOptions.getRange(MapGeneratorOptions.TREASURE_NUMBER);
+       final int blessedChance
+                = mapOptions.getRange(MapGeneratorOptions.BLESSED_NUMBER);
         if (t.isLand()) {
             if (generateBonus && this.cache.nextInt(100) < bonusNumber) {
                 // Create random Bonus Resource
                 t.addResource(createResource(t));
+            }
+            if (this.cache.nextInt(100) < blessedChance) {
+                t.add(new TileImprovement(game, t, blessedBonusType, null));
             }
         } else {
             int adjacentLand = 0;
@@ -715,29 +724,36 @@ public class TerrainGenerator {
                 }
             }
 
-            // In Col1, ocean tiles with less than 3 land neighbours
-            // produce 2 fish, all others produce 4 fish
-            if (adjacentLand > 2) {
-                t.add(new TileImprovement(game, t, fishBonusLandType, null));
-            }
-
-            // In Col1, the ocean tile in front of a river mouth would
-            // get an additional +1 bonus
-            // FIXME: This probably has some false positives, means
-            // river tiles that are NOT a river mouth next to this tile!
-            if (adjacentRiver && !t.hasRiver()) {
-                t.add(new TileImprovement(game, t, fishBonusRiverType, null));
-            }
-
-            if (t.getType().isHighSeasConnected()) {
-                if (generateBonus && adjacentLand > 1
-                    && this.cache.nextInt(10 - adjacentLand) == 0) {
-                    t.addResource(createResource(t));
-                }
+            if (adjacentLand == 0) {
+                if(this.cache.nextInt(100) < treasureChance)
+                    t.addResource(new Resource(t.getGame(),
+                            t,spec.getResourceType("model.resource.treasureChest"), 1));
             } else {
-                if (this.cache.nextInt(100) < bonusNumber) {
-                    // Create random Bonus Resource
-                    t.addResource(createResource(t));
+
+                // In Col1, ocean tiles with less than 3 land neighbours
+                // produce 2 fish, all others produce 4 fish
+                if (adjacentLand > 2) {
+                    t.add(new TileImprovement(game, t, fishBonusLandType, null));
+                }
+
+                // In Col1, the ocean tile in front of a river mouth would
+                // get an additional +1 bonus
+                // FIXME: This probably has some false positives, means
+                // river tiles that are NOT a river mouth next to this tile!
+                if (adjacentRiver && !t.hasRiver()) {
+                    t.add(new TileImprovement(game, t, fishBonusRiverType, null));
+                }
+
+                if (t.getType().isHighSeasConnected()) {
+                    if (generateBonus && adjacentLand > 1
+                            && this.cache.nextInt(10 - adjacentLand) == 0) {
+                        t.addResource(createResource(t));
+                    }
+                } else {
+                    if (this.cache.nextInt(100) < bonusNumber) {
+                        // Create random Bonus Resource
+                        t.addResource(createResource(t));
+                    }
                 }
             }
         }

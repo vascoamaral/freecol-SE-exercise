@@ -1,0 +1,5 @@
+Review de Diogo Nunes a Code Smells de Diogo Mendes:
+
+Speculative Generality - Confirmo
+Duplicated Code - Confirmo
+Data Class - Confirmo
